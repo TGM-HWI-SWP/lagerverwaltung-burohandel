@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<h3 class="mb-3">Neue Bestellung</h3>
+
+<div class="card shadow-sm">
+  <div class="card-body">
+    <form method="POST" class="row g-3">
+      <div class="col-md-7">
+        <label class="form-label">Produkt</label>
+        <select class="form-select" name="product_id" required>
+          {% for p in products %}
+            <option value="{{ p.id }}">
+              {{ p.name }} (Shop: {{ p.shop_qty }}, Lager: {{ p.warehouse_qty }})
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">Anzahl</label>
+        <input class="form-control" type="number" min="1" name="amount" required>
+      </div>
+
+      <div class="col-12">
+        <button class="btn btn-success" type="submit">Bestellung abschicken</button>
+        <a class="btn btn-outline-secondary" href="{{ url_for('index') }}">Zurück</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
