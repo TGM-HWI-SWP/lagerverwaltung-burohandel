@@ -13,32 +13,32 @@ class RepositoryPort(ABC):
     @abstractmethod
     def save_product(self, product: Product) -> None:
         """Produkt speichern"""
-        pass
+        raise NotImplementedError
 
     @abstractmethod
     def load_product(self, product_id: str) -> Optional[Product]:
         """Produkt laden"""
-        pass
+        raise NotImplementedError
 
     @abstractmethod
     def load_all_products(self) -> Dict[str, Product]:
         """Alle Produkte laden"""
-        pass
+        raise NotImplementedError
 
     @abstractmethod
     def delete_product(self, product_id: str) -> None:
         """Produkt löschen"""
-        pass
+        raise NotImplementedError
 
     @abstractmethod
     def save_movement(self, movement: Movement) -> None:
         """Lagerbewegung speichern"""
-        pass
+        raise NotImplementedError
 
     @abstractmethod
     def load_movements(self) -> List[Movement]:
         """Alle Lagerbewegungen laden"""
-        pass
+        raise NotImplementedError
 
 
 class ReportPort(ABC):
@@ -47,9 +47,9 @@ class ReportPort(ABC):
     @abstractmethod
     def generate_inventory_report(self) -> str:
         """Lagerbestandsbericht generieren"""
-        pass
+        raise NotImplementedError
 
     @abstractmethod
     def generate_movement_report(self) -> str:
         """Bewegungsprotokoll generieren"""
-        pass
+        raise NotImplementedError
