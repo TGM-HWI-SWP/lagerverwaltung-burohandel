@@ -57,6 +57,18 @@ Das Projekt folgt der **Port-Adapter-Architektur** (Hexagonal Architecture) für
     - `get_total_inventory_value()` - Gesamtwert
     - `get_inventory_report()` - Report-Daten
 
+#### `report.py`
+- **Klasse:** `ConsoleReportAdapter` (implementiert `ReportPort`)
+- **Methoden:**
+  - `generate_inventory_report()` -> str - Formatierter Bestandsbericht
+  - `generate_movement_report()` -> str - Formatiertes Bewegungsprotokoll
+- **Format:** Tabellarische Ausgabe mit Spalten
+
+#### `repository.py` - Implementierungen
+**InMemoryRepository** (aktuell)
+- `save_product(product)` - Speichert in RAM (Dict)
+- `load_product(product_id)` - Abrufen
+
 - **Klasse:** `Movement`
   - **Attribute:** id, product_id, product_name, quantity_change, movement_type, reason, timestamp, performed_by
   - **Beschreibung:** Immutable Bewegungslog
