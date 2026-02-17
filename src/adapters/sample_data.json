@@ -10,6 +10,8 @@
         "quantity": 250,
         "sku": "SKU-KUG-001",
         "category": "Schreibwaren",
+        "created_at": "2026-01-15T10:00:00",
+        "updated_at": "2026-02-02T10:00:00",
         "notes": "Großpackung mit Mengenrabatt verfügbar"
       },
       {
@@ -20,6 +22,8 @@
         "quantity": 120,
         "sku": "SKU-PAP-001",
         "category": "Papier",
+        "created_at": "2026-01-10T08:30:00",
+        "updated_at": "2026-02-02T11:30:00",
         "notes": "Bestseller - Bestand regelmäßig kontrollieren"
       },
       {
@@ -30,6 +34,8 @@
         "quantity": 85,
         "sku": "SKU-NOT-001",
         "category": "Notizbücher",
+        "created_at": "2026-01-20T14:15:00",
+        "updated_at": "2026-02-03T08:00:00",
         "notes": "Verfügbare Farben: Blau, Schwarz, Rot"
       },
       {
@@ -40,6 +46,8 @@
         "quantity": 45,
         "sku": "SKU-USB-001",
         "category": "Elektronik",
+        "created_at": "2026-01-22T09:45:00",
+        "updated_at": "2026-02-06T11:45:00",
         "notes": ""
       },
       {
@@ -50,6 +58,8 @@
         "quantity": 30,
         "sku": "SKU-ORG-001",
         "category": "Büromöbel",
+        "created_at": "2026-01-18T11:20:00",
+        "updated_at": "2026-02-01T15:30:00",
         "notes": "Farbe: Schwarz, weiß, grau"
       },
       {
@@ -60,6 +70,8 @@
         "quantity": 22,
         "sku": "SKU-TON-001",
         "category": "Drucker-Zubehör",
+        "created_at": "2026-01-12T13:00:00",
+        "updated_at": "2026-02-04T14:20:00",
         "notes": "Kompatibel mit HP, Canon, Lexmark Modellen"
       },
       {
@@ -70,6 +82,8 @@
         "quantity": 180,
         "sku": "SKU-HEF-001",
         "category": "Ablage",
+        "created_at": "2026-01-08T07:30:00",
+        "updated_at": "2026-02-01T09:00:00",
         "notes": ""
       },
       {
@@ -80,6 +94,8 @@
         "quantity": 8,
         "sku": "SKU-MON-001",
         "category": "Elektronik",
+        "created_at": "2026-01-25T16:45:00",
+        "updated_at": "2026-02-03T10:30:00",
         "notes": "Mit VGA und HDMI Anschluss"
       },
       {
@@ -90,6 +106,8 @@
         "quantity": 65,
         "sku": "SKU-KAB-001",
         "category": "Zubehör",
+        "created_at": "2026-01-19T10:30:00",
+        "updated_at": "2026-02-02T12:00:00",
         "notes": ""
       },
       {
@@ -100,6 +118,8 @@
         "quantity": 18,
         "sku": "SKU-TAS-001",
         "category": "Elektronik",
+        "created_at": "2026-01-24T12:15:00",
+        "updated_at": "2026-02-05T09:00:00",
         "notes": "Batterielaufzeit: 2 Jahre"
       },
       {
@@ -110,6 +130,8 @@
         "quantity": 12,
         "sku": "SKU-STU-001",
         "category": "Büromöbel",
+        "created_at": "2026-01-28T09:30:00",
+        "updated_at": "2026-02-05T10:15:00",
         "notes": "Schwarz, verstellbare Höhe 45-55cm"
       },
       {
@@ -120,6 +142,8 @@
         "quantity": 150,
         "sku": "SKU-HAF-001",
         "category": "Schreibwaren",
+        "created_at": "2026-01-14T08:00:00",
+        "updated_at": "2026-02-01T11:30:00",
         "notes": "Farben: Gelb, pink, blau, grün, orange"
       }
     ],
