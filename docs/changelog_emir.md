@@ -1,15 +1,15 @@
 # Changelog - [Name]
 
-Persönliches Changelog für [Name], Rolle: [Rollenbezeichnung]
+Persönliches Changelog für Edemen Emir, Rolle: Backend & DBMS
 
 ---
 
-## [v0.1] - 2025-01-20
+## [v0.1] - 2026-02-17
 
 ### Implementiert
-- [Feature/Fix 1]
-- [Feature/Fix 2]
-- [Feature/Fix 3]
+DB Implementiert
+DBMS implementiert
+Json entkoppeln
 
 ### Tests geschrieben
 - test_[name 1]
@@ -17,9 +17,9 @@ Persönliches Changelog für [Name], Rolle: [Rollenbezeichnung]
 
 ### Commits
 ```
-- abc1234 Feat: [Beschreibung]
-- def5678 Test: [Beschreibung]
-- ghi9012 Docs: [Beschreibung]
+- DB Implementiert
+- Adapter geändert für .DB
+- Domain geändert auf .DB
 ```
 
 ### Mergekonflikt(e)
