@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<h3 class="mb-3">Shop</h3>
+
+<div class="card shadow-sm">
+  <div class="card-body">
+    <table class="table table-striped align-middle">
+      <thead>
+        <tr>
+          <th>Produkt</th>
+          <th class="text-end">Menge im Shop</th>
+          <th class="text-end">Verfügbar gesamt</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in products %}
+        <tr>
+          <td>{{ p.name }}</td>
+          <td class="text-end">{{ p.shop_qty }}</td>
+          <td class="text-end">{{ p.available_total }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <a class="btn btn-success" href="{{ url_for('bestellung') }}">Neue Bestellung</a>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <h3 class="mb-0">Lager</h3>
+  <a class="btn btn-success" href="{{ url_for('bestellung') }}">Neue Bestellung</a>
+</div>
+
+<div class="card shadow-sm">
+  <div class="card-body">
+    <table class="table table-striped align-middle">
+      <thead>
+        <tr>
+          <th>Produkt</th>
+          <th class="text-end">Menge im Lager</th>
+          <th class="text-end">Verfügbar gesamt</th>
+          <th style="width: 360px;">In den Shop schicken</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in products %}
+        <tr>
+          <td>{{ p.name }}</td>
+          <td class="text-end">{{ p.warehouse_qty }}</td>
+          <td class="text-end">{{ p.available_total }}</td>
+          <td>
+            <form class="d-flex gap-2" method="POST" action="{{ url_for('transfer_to_shop') }}">
+              <input type="hidden" name="product_id" value="{{ p.id }}">
+              <input class="form-control" type="number" min="1" name="amount" placeholder="Anzahl">
+              <button class="btn btn-primary" type="submit">Senden</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

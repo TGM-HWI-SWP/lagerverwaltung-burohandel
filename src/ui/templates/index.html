@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card shadow-sm">
+  <div class="card-body">
+    <h3 class="mb-3">Startseite</h3>
+    <div class="d-grid gap-2 d-sm-flex">
+      <a class="btn btn-primary btn-lg" href="{{ url_for('lager') }}">Lager</a>
+      <a class="btn btn-secondary btn-lg" href="{{ url_for('shop') }}">Shop</a>
+      <a class="btn btn-success btn-lg" href="{{ url_for('bestellung') }}">Neue Bestellung</a>
+    </div>
+  </div>
+</div>
+{% endblock %}
