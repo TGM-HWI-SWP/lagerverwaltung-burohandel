@@ -1,0 +1,229 @@
+{
+  "warehouse": {
+    "name": "Bürohandel Zentral-Lager",
+    "products": [
+      {
+        "id": "P001",
+        "name": "Kugelschreiber blau",
+        "description": "Klassischer Kugelschreiber mit blauer Tinte, Strichstärke 1.0mm",
+        "price": 0.45,
+        "quantity": 250,
+        "sku": "SKU-KUG-001",
+        "category": "Schreibwaren",
+        "notes": "Großpackung mit Mengenrabatt verfügbar"
+      },
+      {
+        "id": "P002",
+        "name": "Kopierpapier A4 500er Pack",
+        "description": "Hochwertiges Kopierpapier A4, 80g/m², weiß, 500 Blatt",
+        "price": 4.99,
+        "quantity": 120,
+        "sku": "SKU-PAP-001",
+        "category": "Papier",
+        "notes": "Bestseller - Bestand regelmäßig kontrollieren"
+      },
+      {
+        "id": "P003",
+        "name": "Notizbuch DIN A5",
+        "description": "Notizbuch mit 100 linierter Seiten, Hardcover, verschiedene Farben",
+        "price": 3.50,
+        "quantity": 85,
+        "sku": "SKU-NOT-001",
+        "category": "Notizbücher",
+        "notes": "Verfügbare Farben: Blau, Schwarz, Rot"
+      },
+      {
+        "id": "P004",
+        "name": "USB-Stick 32GB",
+        "description": "USB 3.0 Stick mit 32GB Speicher, schnelle Datenübertragung",
+        "price": 8.99,
+        "quantity": 45,
+        "sku": "SKU-USB-001",
+        "category": "Elektronik",
+        "notes": ""
+      },
+      {
+        "id": "P005",
+        "name": "Schreibtisch-Organizer",
+        "description": "Schreibtisch-Organizer mit 5 Fächern aus stabilem Kunststoff",
+        "price": 12.50,
+        "quantity": 30,
+        "sku": "SKU-ORG-001",
+        "category": "Büromöbel",
+        "notes": "Farbe: Schwarz, weiß, grau"
+      },
+      {
+        "id": "P006",
+        "name": "Druckertoner schwarz",
+        "description": "Druckertoner für Laserdrucker, Ergiebigkeit 2000 Seiten",
+        "price": 35.00,
+        "quantity": 22,
+        "sku": "SKU-TON-001",
+        "category": "Drucker-Zubehör",
+        "notes": "Kompatibel mit HP, Canon, Lexmark Modellen"
+      },
+      {
+        "id": "P007",
+        "name": "Aktenhefter blau",
+        "description": "Stabiler Aktenhefter aus Kunststoff mit Metall-Spannerzug",
+        "price": 1.20,
+        "quantity": 180,
+        "sku": "SKU-HEF-001",
+        "category": "Ablage",
+        "notes": ""
+      },
+      {
+        "id": "P008",
+        "name": "Monitor 24 Zoll Full HD",
+        "description": "LED-Monitor 24 Zoll, 1920x1080 Auflösung, IPS-Panel",
+        "price": 189.99,
+        "quantity": 8,
+        "sku": "SKU-MON-001",
+        "category": "Elektronik",
+        "notes": "Mit VGA und HDMI Anschluss"
+      },
+      {
+        "id": "P009",
+        "name": "Kabelorganizer Set",
+        "description": "Set aus 5 verschiedenen Kabelorganiziern und Klettband",
+        "price": 7.50,
+        "quantity": 65,
+        "sku": "SKU-KAB-001",
+        "category": "Zubehör",
+        "notes": ""
+      },
+      {
+        "id": "P010",
+        "name": "Ergonomische Tastatur",
+        "description": "Kabellose ergonomische Tastatur mit deutschem Tastenlayout",
+        "price": 49.50,
+        "quantity": 18,
+        "sku": "SKU-TAS-001",
+        "category": "Elektronik",
+        "notes": "Batterielaufzeit: 2 Jahre"
+      },
+      {
+        "id": "P011",
+        "name": "Bürostuhl ergonomisch",
+        "description": "Ergonomischer Bürostuhl mit Wippfunktion und Armlehnen",
+        "price": 129.99,
+        "quantity": 12,
+        "sku": "SKU-STU-001",
+        "category": "Büromöbel",
+        "notes": "Schwarz, verstellbare Höhe 45-55cm"
+      },
+      {
+        "id": "P012",
+        "name": "Haftnotizen 100er Blöcke",
+        "description": "Selbstklebende Haftnoten in 5 Farben, je 100 Blatt",
+        "price": 2.99,
+        "quantity": 150,
+        "sku": "SKU-HAF-001",
+        "category": "Schreibwaren",
+        "notes": "Farben: Gelb, pink, blau, grün, orange"
+      }
+    ],
+    "movements": [
+      {
+        "id": "M001",
+        "product_id": "P001",
+        "product_name": "Kugelschreiber blau",
+        "quantity_change": 250,
+        "movement_type": "IN",
+        "reason": "Wareneingangsprüfung vom Lieferanten",
+        "timestamp": "2026-02-01T08:30:00",
+        "performed_by": "Wareneingang"
+      },
+      {
+        "id": "M002",
+        "product_id": "P002",
+        "product_name": "Kopierpapier A4 500er Pack",
+        "quantity_change": 120,
+        "movement_type": "IN",
+        "reason": "Lieferung von Papierlieferant AG",
+        "timestamp": "2026-02-01T09:15:00",
+        "performed_by": "Wareneingang"
+      },
+      {
+        "id": "M003",
+        "product_id": "P001",
+        "product_name": "Kugelschreiber blau",
+        "quantity_change": -15,
+        "movement_type": "OUT",
+        "reason": "Verkauf an Kundenauftrag KD-2026-001",
+        "timestamp": "2026-02-02T10:00:00",
+        "performed_by": "Verkauf"
+      },
+      {
+        "id": "M004",
+        "product_id": "P002",
+        "product_name": "Kopierpapier A4 500er Pack",
+        "quantity_change": -8,
+        "movement_type": "OUT",
+        "reason": "Versand Kundenbestellung KD-2026-002",
+        "timestamp": "2026-02-02T11:30:00",
+        "performed_by": "Versand"
+      },
+      {
+        "id": "M005",
+        "product_id": "P003",
+        "product_name": "Notizbuch DIN A5",
+        "quantity_change": 85,
+        "movement_type": "IN",
+        "reason": "Neuware vom Hersteller",
+        "timestamp": "2026-02-03T08:00:00",
+        "performed_by": "Wareneingang"
+      },
+      {
+        "id": "M006",
+        "product_id": "P008",
+        "product_name": "Monitor 24 Zoll Full HD",
+        "quantity_change": 8,
+        "movement_type": "IN",
+        "reason": "Lieferung vom Großhändler",
+        "timestamp": "2026-02-03T10:30:00",
+        "performed_by": "Wareneingang"
+      },
+      {
+        "id": "M007",
+        "product_id": "P006",
+        "product_name": "Druckertoner schwarz",
+        "quantity_change": -2,
+        "movement_type": "OUT",
+        "reason": "Verkauf an Regularkunde",
+        "timestamp": "2026-02-04T14:20:00",
+        "performed_by": "Verkauf"
+      },
+      {
+        "id": "M008",
+        "product_id": "P010",
+        "product_name": "Ergonomische Tastatur",
+        "quantity_change": 18,
+        "movement_type": "IN",
+        "reason": "Bestandsnachschub vom Distributor",
+        "timestamp": "2026-02-05T09:00:00",
+        "performed_by": "Wareneingang"
+      },
+      {
+        "id": "M009",
+        "product_id": "P011",
+        "product_name": "Bürostuhl ergonomisch",
+        "quantity_change": 12,
+        "movement_type": "IN",
+        "reason": "Möbellieferung vom Hersteller",
+        "timestamp": "2026-02-05T10:15:00",
+        "performed_by": "Wareneingang"
+      },
+      {
+        "id": "M010",
+        "product_id": "P004",
+        "product_name": "USB-Stick 32GB",
+        "quantity_change": -3,
+        "movement_type": "OUT",
+        "reason": "Kundenbewährte Bestellung",
+        "timestamp": "2026-02-06T11:45:00",
+        "performed_by": "Versand"
+      }
+    ]
+  }
+}
