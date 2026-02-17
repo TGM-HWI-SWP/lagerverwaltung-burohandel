@@ -8,7 +8,7 @@ from ..domain.warehouse import Movement
 
 
 class RepositoryPort(ABC):
-    """Port für Datenpersistenz"""
+    """Port für Datenpersistenz."""
 
     @abstractmethod
     def save_product(self, product: Product) -> None:

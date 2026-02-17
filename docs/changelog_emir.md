@@ -17,9 +17,9 @@ Json entkoppeln
 
 ### Commits
 ```
-- abc1234 Feat: [Beschreibung]
-- def5678 Test: [Beschreibung]
-- ghi9012 Docs: [Beschreibung]
+- DB Implementiert
+- Adapter geändert für .DB
+- Domain geändert auf .DB
 ```
 
 ### Mergekonflikt(e)
