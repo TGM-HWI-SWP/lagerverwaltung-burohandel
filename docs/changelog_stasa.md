@@ -1,6 +1,6 @@
-# Changelog - [Name]
+# Changelog - Stasa
 
-Persönliches Changelog für [Name], Rolle: [Rollenbezeichnung]
+Persönliches Changelog für Stasa, Rolle: 1 (Projektführung)
 
 ---
 
@@ -128,5 +128,5 @@ Persönliches Changelog für [Name], Rolle: [Rollenbezeichnung]
 
 ---
 
-**Changelog erstellt von:** [Name]  
+**Changelog erstellt von:** Stojanovic Stasa
 **Letzte Aktualisierung:** [Datum]
