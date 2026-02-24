@@ -91,6 +91,7 @@ class SQLiteRepository(RepositoryPort):
                 )
                 """
             )
+            conn.commit()
 
     # --- helper: datetime <-> text ---
     @staticmethod
@@ -137,6 +138,7 @@ class SQLiteRepository(RepositoryPort):
                     self._dt_to_text(product.updated_at),
                 ),
             )
+            conn.commit()
 
     def load_product(self, product_id: str) -> Optional[Product]:
         with self._connect() as conn:
@@ -195,6 +197,7 @@ class SQLiteRepository(RepositoryPort):
     def delete_product(self, product_id: str) -> None:
         with self._connect() as conn:
             conn.execute("DELETE FROM products WHERE id = ?", (product_id,))
+            conn.commit()
 
     def save_movement(self, movement: Movement) -> None:
         with self._connect() as conn:
@@ -216,6 +219,7 @@ class SQLiteRepository(RepositoryPort):
                     movement.performed_by,
                 ),
             )
+            conn.commit()
 
     def load_movements(self) -> List[Movement]:
         with self._connect() as conn:
