@@ -33,7 +33,9 @@ class ConsoleReportAdapter(ReportPort):
             report += f"ID: {product_id}\n"
             report += f"  Name: {product.name}\n"
             report += f"  Kategorie: {product.category}\n"
-            report += f"  Bestand: {product.quantity}\n"
+            report += f"  Lagerbestand: {product.warehouse_qty}\n"
+            report += f"  Shopbestand: {product.shop_qty}\n"
+            report += f"  Gesamtbestand: {product.get_total_qty()}\n"
             report += f"  Preis: {product.price:.2f} €\n"
             report += f"  Gesamtwert: {value:.2f} €\n\n"
 

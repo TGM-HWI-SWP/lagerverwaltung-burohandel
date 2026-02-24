@@ -66,7 +66,8 @@ class SQLiteRepository(RepositoryPort):
                     name TEXT NOT NULL,
                     description TEXT,
                     price REAL NOT NULL,
-                    quantity INTEGER NOT NULL,
+                    warehouse_qty INTEGER NOT NULL DEFAULT 0,
+                    shop_qty INTEGER NOT NULL DEFAULT 0,
                     sku TEXT,
                     category TEXT,
                     notes TEXT,
@@ -107,14 +108,15 @@ class SQLiteRepository(RepositoryPort):
             conn.execute(
                 """
                 INSERT INTO products (
-                    id, name, description, price, quantity, sku, category, notes, created_at, updated_at
+                    id, name, description, price, warehouse_qty, shop_qty, sku, category, notes, created_at, updated_at
                 )
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ON CONFLICT(id) DO UPDATE SET
                     name=excluded.name,
                     description=excluded.description,
                     price=excluded.price,
-                    quantity=excluded.quantity,
+                    warehouse_qty=excluded.warehouse_qty,
+                    shop_qty=excluded.shop_qty,
                     sku=excluded.sku,
                     category=excluded.category,
                     notes=excluded.notes,
@@ -126,7 +128,8 @@ class SQLiteRepository(RepositoryPort):
                     product.name,
                     product.description,
                     float(product.price),
-                    int(product.quantity),
+                    int(product.warehouse_qty),
+                    int(product.shop_qty),
                     product.sku,
                     product.category,
                     product.notes,
@@ -150,7 +153,8 @@ class SQLiteRepository(RepositoryPort):
             name=row["name"],
             description=row["description"] or "",
             price=float(row["price"]),
-            quantity=int(row["quantity"]),
+            warehouse_qty=int(row["warehouse_qty"]),
+            shop_qty=int(row["shop_qty"]),
             sku=row["sku"] or "",
             category=row["category"] or "",
             notes=row["notes"],
@@ -174,7 +178,8 @@ class SQLiteRepository(RepositoryPort):
                 name=row["name"],
                 description=row["description"] or "",
                 price=float(row["price"]),
-                quantity=int(row["quantity"]),
+                warehouse_qty=int(row["warehouse_qty"]),
+                shop_qty=int(row["shop_qty"]),
                 sku=row["sku"] or "",
                 category=row["category"] or "",
                 notes=row["notes"],

@@ -5,7 +5,7 @@
 **Projekttitel:** Lagerverwaltungssystem  
 **Projektdauer:** 8 Wochen  
 **Gruppengröße:** 4 Personen  
-**Projektverantwortung:** [Name Rolle 1]
+**Projektverantwortung:** Stasa
 
 ---
 
