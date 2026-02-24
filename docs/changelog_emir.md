@@ -1,4 +1,4 @@
-# Changelog - [Name]
+# Changelog - Edemen Emir
 
 Persönliches Changelog für Edemen Emir, Rolle: Backend & DBMS
 
@@ -11,7 +11,7 @@ DB Implementiert
 DBMS implementiert
 Json entkoppeln
 
-### Tests geschrieben
+### Tests geschrieben 
 - test_[name 1]
 - test_[name 2]
 
