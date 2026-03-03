@@ -23,6 +23,7 @@ class Product:
     created_at: datetime = field(default_factory=datetime.now)
     updated_at: datetime = field(default_factory=datetime.now)
     notes: Optional[str] = None
+    min_stock_level: int = 10  # Minimum Lagerbestand
 
     def __post_init__(self):
         """Validierung nach Initialisierung. Siehe docs/DATACLASS_ERKLAERT.md."""
@@ -74,3 +75,13 @@ class Product:
     def get_total_value(self) -> float:
         """Gesamtwert des Produktbestands berechnen"""
         return self.price * self.get_total_qty()
+
+    def is_low_stock(self) -> bool:
+        """Prüfe ob Lagerbestand unter Minimum ist"""
+        return self.warehouse_qty < self.min_stock_level
+
+    def get_stock_status(self) -> str:
+        """Liefere Text-Status des Lagerbestands"""
+        if self.is_low_stock():
+            return f"⚠️ Kritisch ({self.warehouse_qty}/{self.min_stock_level})"
+        return f"✓ OK ({self.warehouse_qty})"

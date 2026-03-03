@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <h3 class="mb-0">⚠️ Produkte mit niedrigem Lagerbestand</h3>
+  <a class="btn btn-primary" href="{{ url_for('lager') }}">Zurück zum Lager</a>
+</div>
+
+{% if products %}
+<div class="alert alert-warning">
+  <strong>{{ products|length }} Produkt(e)</strong> haben einen Bestand unter dem Minimum!
+</div>
+
+<div class="card shadow-sm">
+  <div class="card-body">
+    <table class="table table-striped align-middle">
+      <thead>
+        <tr>
+          <th>Produkt</th>
+          <th class="text-end">Kategorie</th>
+          <th class="text-end">Aktueller Bestand</th>
+          <th class="text-end">Minimum</th>
+          <th class="text-end">Fehlmenge</th>
+          <th class="text-end">Preis/Stk</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in products %}
+        <tr class="table-danger">
+          <td>
+            <strong>{{ p.name }}</strong><br>
+            <small class="text-muted">{{ p.sku }}</small>
+          </td>
+          <td class="text-end">{{ p.category }}</td>
+          <td class="text-end">
+            <span class="badge bg-danger">{{ p.warehouse_qty }}</span>
+          </td>
+          <td class="text-end">{{ p.min_stock_level }}</td>
+          <td class="text-end">
+            <strong class="text-danger">-{{ p.min_stock_level - p.warehouse_qty }}</strong>
+          </td>
+          <td class="text-end">{{ "%.2f"|format(p.price) }} €</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% else %}
+<div class="alert alert-success">
+  ✓ Alle Produkte haben einen ausreichenden Lagerbestand!
+</div>
+{% endif %}
+{% endblock %}

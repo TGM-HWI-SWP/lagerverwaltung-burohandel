@@ -2,7 +2,14 @@
 {% block content %}
 <div class="d-flex align-items-center justify-content-between mb-3">
   <h3 class="mb-0">Lager</h3>
-  <a class="btn btn-success" href="{{ url_for('bestellung') }}">Neue Bestellung</a>
+  <div class="gap-2 d-flex">
+    {% if low_stock_count > 0 %}
+    <a class="btn btn-warning" href="{{ url_for('low_stock') }}">
+      ⚠️ {{ low_stock_count }} Produkt(e) unter Minimum
+    </a>
+    {% endif %}
+    <a class="btn btn-success" href="{{ url_for('bestellung') }}">Neue Bestellung</a>
+  </div>
 </div>
 
 <div class="card shadow-sm">
@@ -13,15 +20,23 @@
           <th>Produkt</th>
           <th class="text-end">Menge im Lager</th>
           <th class="text-end">Verfügbar gesamt</th>
+          <th class="text-end">Status</th>
           <th style="width: 360px;">In den Shop schicken</th>
         </tr>
       </thead>
       <tbody>
         {% for p in products %}
-        <tr>
+        <tr {% if p.is_low_stock %}class="table-warning"{% endif %}>
           <td>{{ p.name }}</td>
           <td class="text-end">{{ p.warehouse_qty }}</td>
           <td class="text-end">{{ p.available_total }}</td>
+          <td class="text-end">
+            {% if p.is_low_stock %}
+              <span class="badge bg-danger">⚠️ Kritisch ({{ p.warehouse_qty }}/{{ p.min_stock_level }})</span>
+            {% else %}
+              <span class="badge bg-success">✓ OK</span>
+            {% endif %}
+          </td>
           <td>
             <form class="d-flex gap-2" method="POST" action="{{ url_for('transfer_to_shop') }}">
               <input type="hidden" name="product_id" value="{{ p.id }}">

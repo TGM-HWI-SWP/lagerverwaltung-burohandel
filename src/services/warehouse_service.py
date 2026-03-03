@@ -216,6 +216,9 @@ class WarehouseService:
                 "notes": product.notes,
                 "created_at": product.created_at,
                 "updated_at": product.updated_at,
+                "min_stock_level": product.min_stock_level,
+                "is_low_stock": product.is_low_stock(),
+                "stock_status": product.get_stock_status(),
             })
         return products
 
@@ -259,3 +262,14 @@ class WarehouseService:
         if self.report_adapter:
             return self.report_adapter.generate_movement_report()
         return "Report Adapter nicht konfiguriert."
+    # ===== Low Stock Management =====
+
+    def get_low_stock_products(self) -> List[Product]:
+        """Liefere alle Produkte mit kritischem Lagerbestand (unter Minimum)"""
+        products = self.repository.load_all_products()
+        low_stock = [p for p in products.values() if p.is_low_stock()]
+        return sorted(low_stock, key=lambda x: x.warehouse_qty)
+
+    def get_low_stock_count(self) -> int:
+        """Anzahl Produkte mit kritischem Lagerbestand"""
+        return len(self.get_low_stock_products())

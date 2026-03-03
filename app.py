@@ -49,7 +49,14 @@ def create_app(db_path: str = "warehouse.db") -> Flask:
     def lager():
         """Lager-Übersicht"""
         products = app.warehouse_service.get_products_with_totals()
-        return render_template("lager.html", products=products)
+        low_stock_count = app.warehouse_service.get_low_stock_count()
+        return render_template("lager.html", products=products, low_stock_count=low_stock_count)
+
+    @app.route("/low-stock")
+    def low_stock():
+        """Low Stock Dashboard - Produkte unter Minimum"""
+        products = app.warehouse_service.get_low_stock_products()
+        return render_template("low_stock.html", products=products)
 
     @app.route("/shop")
     def shop():

@@ -72,7 +72,8 @@ class SQLiteRepository(RepositoryPort):
                     category TEXT,
                     notes TEXT,
                     created_at TEXT,
-                    updated_at TEXT
+                    updated_at TEXT,
+                    min_stock_level INTEGER DEFAULT 10
                 )
                 """
             )
@@ -109,9 +110,9 @@ class SQLiteRepository(RepositoryPort):
             conn.execute(
                 """
                 INSERT INTO products (
-                    id, name, description, price, warehouse_qty, shop_qty, sku, category, notes, created_at, updated_at
+                    id, name, description, price, warehouse_qty, shop_qty, sku, category, notes, created_at, updated_at, min_stock_level
                 )
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ON CONFLICT(id) DO UPDATE SET
                     name=excluded.name,
                     description=excluded.description,
@@ -122,7 +123,8 @@ class SQLiteRepository(RepositoryPort):
                     category=excluded.category,
                     notes=excluded.notes,
                     created_at=excluded.created_at,
-                    updated_at=excluded.updated_at
+                    updated_at=excluded.updated_at,
+                    min_stock_level=excluded.min_stock_level
                 """,
                 (
                     product.id,
@@ -136,6 +138,7 @@ class SQLiteRepository(RepositoryPort):
                     product.notes,
                     self._dt_to_text(product.created_at),
                     self._dt_to_text(product.updated_at),
+                    int(product.min_stock_level),
                 ),
             )
             conn.commit()
@@ -160,6 +163,7 @@ class SQLiteRepository(RepositoryPort):
             sku=row["sku"] or "",
             category=row["category"] or "",
             notes=row["notes"],
+            min_stock_level=int(row["min_stock_level"]) if row["min_stock_level"] else 10,
         )
 
         if row["created_at"]:
@@ -185,6 +189,7 @@ class SQLiteRepository(RepositoryPort):
                 sku=row["sku"] or "",
                 category=row["category"] or "",
                 notes=row["notes"],
+                min_stock_level=int(row["min_stock_level"]) if row["min_stock_level"] else 10,
             )
             if row["created_at"]:
                 p.created_at = self._text_to_dt(row["created_at"])
