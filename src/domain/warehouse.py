@@ -42,9 +42,7 @@ class Warehouse:
     def record_movement(self, movement: Movement) -> None:
         """Lagerbewegung protokollieren"""
         if movement.product_id not in self.products:
-            raise ValueError(
-                f"Produkt mit ID {movement.product_id} existiert nicht"
-            )
+            raise ValueError(f"Produkt mit ID {movement.product_id} existiert nicht")
         self.movements.append(movement)
 
     def get_total_inventory_value(self) -> float:

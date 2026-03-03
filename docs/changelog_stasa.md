@@ -1,6 +1,6 @@
-# Changelog - Stasa Stojanovic
+# Changelog - Stasa
 
-Persönliches Changelog für Stasa, Rolle: 1 (Teamführung, Schnittstellen, Quality)
+Persönliches Changelog für Stasa, Rolle: 1 (Projektführung)
 
 ---
 
@@ -111,5 +111,5 @@ Persönliches Changelog für Stasa, Rolle: 1 (Teamführung, Schnittstellen, Qual
 
 ---
 
-**Changelog erstellt von:** [Name]  
+**Changelog erstellt von:** Stojanovic Stasa
 **Letzte Aktualisierung:** [Datum]
