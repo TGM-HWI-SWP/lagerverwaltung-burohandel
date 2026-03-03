@@ -1,14 +1,15 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="d-flex align-items-center justify-content-between mb-3">
-  <h3 class="mb-0">Lager</h3>
-  <div class="gap-2 d-flex">
+  <h3 class="mb-0">📦 Lager-Übersicht</h3>
+  <div class="gap-2 d-flex flex-wrap justify-content-end">
     {% if low_stock_count > 0 %}
-    <a class="btn btn-warning" href="{{ url_for('low_stock') }}">
-      ⚠️ {{ low_stock_count }} Produkt(e) unter Minimum
+    <a class="btn btn-warning btn-sm" href="{{ url_for('low_stock') }}">
+      ⚠️ {{ low_stock_count }} kritisch
     </a>
     {% endif %}
-    <a class="btn btn-success" href="{{ url_for('bestellung') }}">Neue Bestellung</a>
+    <a class="btn btn-primary btn-sm" href="{{ url_for('transfer') }}">↔️ Transfer</a>
+    <a class="btn btn-success btn-sm" href="{{ url_for('einkauf') }}">📥 Einkauf</a>
   </div>
 </div>
 
@@ -18,31 +19,32 @@
       <thead>
         <tr>
           <th>Produkt</th>
-          <th class="text-end">Menge im Lager</th>
-          <th class="text-end">Verfügbar gesamt</th>
+          <th class="text-end">Im Lager</th>
+          <th class="text-end">Im Shop</th>
           <th class="text-end">Status</th>
-          <th style="width: 360px;">In den Shop schicken</th>
         </tr>
       </thead>
       <tbody>
         {% for p in products %}
         <tr {% if p.is_low_stock %}class="table-warning"{% endif %}>
-          <td>{{ p.name }}</td>
-          <td class="text-end">{{ p.warehouse_qty }}</td>
-          <td class="text-end">{{ p.available_total }}</td>
+          <td>
+            <strong>{{ p.name }}</strong><br>
+            <small class="text-muted">{{ p.sku }}</small>
+          </td>
+          <td class="text-end">
+            <span class="badge {% if p.warehouse_qty > p.min_stock_level %}bg-success{% else %}bg-danger{% endif %}">
+              {{ p.warehouse_qty }}
+            </span>
+          </td>
+          <td class="text-end">
+            <span class="badge bg-info">{{ p.shop_qty }}</span>
+          </td>
           <td class="text-end">
             {% if p.is_low_stock %}
-              <span class="badge bg-danger">⚠️ Kritisch ({{ p.warehouse_qty }}/{{ p.min_stock_level }})</span>
+              <span class="badge bg-danger">⚠️ Kritisch</span>
             {% else %}
               <span class="badge bg-success">✓ OK</span>
             {% endif %}
-          </td>
-          <td>
-            <form class="d-flex gap-2" method="POST" action="{{ url_for('transfer_to_shop') }}">
-              <input type="hidden" name="product_id" value="{{ p.id }}">
-              <input class="form-control" type="number" min="1" name="amount" placeholder="Anzahl">
-              <button class="btn btn-primary" type="submit">Senden</button>
-            </form>
           </td>
         </tr>
         {% endfor %}
@@ -50,4 +52,13 @@
     </table>
   </div>
 </div>
+
+<div class="mt-4 alert alert-info">
+  <h6 class="mb-2">💡 Warfluss:</h6>
+  <ol class="mb-0"><li><strong>Einkauf:</strong> Neue Produkte vom Lieferanten ins Lager</li>
+    <li><strong>Transfer:</strong> Zwischen Lager und Shop verschieben</li>
+    <li><strong>Verkauf:</strong> Kunde kauft aus dem Shop</li>
+  </ol>
+</div>
+
 {% endblock %}

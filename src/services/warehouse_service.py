@@ -147,13 +147,49 @@ class WarehouseService:
 
         return True
 
-    def create_order(self, product_id: str, quantity: int) -> bool:
+    # ===== Purchasing =====
+
+    def create_purchase(self, product_id: str, quantity: int, reason: str = "") -> bool:
         """
-        Bestellung erstellen (Produkt aus dem Shop entnehmen)
+        Einkauf von Lieferanten - Produkte kommen ins Lager
 
         Args:
             product_id: Produkt-ID
-            quantity: Bestellmenge
+            quantity: Bestellmenge vom Lieferanten
+            reason: Grund des Einkaufs
+
+        Returns:
+            True wenn erfolgreich, False sonst
+        """
+        product = self.repository.load_product(product_id)
+        if not product:
+            return False
+
+        if quantity <= 0:
+            return False
+
+        product.update_warehouse_qty(quantity)
+        self.repository.save_product(product)
+
+        # Bewegung aufzeichnen
+        self._record_movement(
+            product_id=product_id,
+            product_name=product.name,
+            quantity_change=quantity,
+            movement_type="IN",
+            reason=reason or "Lieferanteneinkauf",
+        )
+
+        return True
+
+    def sell_product(self, product_id: str, quantity: int, reason: str = "") -> bool:
+        """
+        Verkauf an Kunden - Produkte werden aus dem Shop entnommen
+
+        Args:
+            product_id: Produkt-ID
+            quantity: Verkaufsmenge
+            reason: Grund des Verkaufs
 
         Returns:
             True wenn erfolgreich, False sonst
@@ -173,8 +209,8 @@ class WarehouseService:
             product_id=product_id,
             product_name=product.name,
             quantity_change=-quantity,
-            movement_type="ORDER",
-            reason="Bestellung",
+            movement_type="SOLD",
+            reason=reason or "Kundenverkauf",
         )
 
         return True
@@ -269,6 +305,103 @@ class WarehouseService:
         products = self.repository.load_all_products()
         low_stock = [p for p in products.values() if p.is_low_stock()]
         return sorted(low_stock, key=lambda x: x.warehouse_qty)
+
+    def get_low_stock_count(self) -> int:
+        """Anzahl Produkte mit kritischem Lagerbestand"""
+        return len(self.get_low_stock_products())
+
+    # ===== Dashboard Statistics =====
+
+    def get_dashboard_stats(self) -> Dict:
+        """Sammle alle wichtigen Statistiken für das Dashboard"""
+        products = self.repository.load_all_products()
+        
+        total_warehouse_value = self.get_total_warehouse_value()
+        total_shop_value = self.get_total_shop_value()
+        low_stock_products = self.get_low_stock_products()
+        
+        # Kategorien sammeln
+        categories = {}
+        for product in products.values():
+            if product.category:
+                if product.category not in categories:
+                    categories[product.category] = 0
+                categories[product.category] += 1
+        
+        # Top Kategorien (nach Anzahl Produkte)
+        top_categories = sorted(categories.items(), key=lambda x: x[1], reverse=True)[:5]
+        
+        # Höchster Wert Produkt
+        most_valuable = max(products.values(), key=lambda p: p.get_total_value()) if products else None
+        
+        return {
+            "total_products": len(products),
+            "low_stock_count": len(low_stock_products),
+            "total_warehouse_value": total_warehouse_value,
+            "total_shop_value": total_shop_value,
+            "total_inventory_value": total_warehouse_value + total_shop_value,
+            "warehouse_product_count": sum(1 for p in products.values() if p.warehouse_qty > 0),
+            "shop_product_count": sum(1 for p in products.values() if p.shop_qty > 0),
+            "top_categories": top_categories,
+            "most_valuable_product": most_valuable,
+            "low_stock_products": low_stock_products[:5],  # Top 5 kritische Produkte
+        }
+
+    def get_product_categories(self) -> List[str]:
+        """Alle eindeutigen Produktkategorien abrufen"""
+        categories = set()
+        for product in self.repository.load_all_products().values():
+            if product.category:
+                categories.add(product.category)
+        return sorted(list(categories))
+
+    def get_products_by_category(self, category: str) -> List[Dict]:
+        """Alle Produkte einer spezifischen Kategorie"""
+        products = []
+        for product in self.get_all_products():
+            if product.category == category:
+                products.append({
+                    "id": product.id,
+                    "name": product.name,
+                    "description": product.description,
+                    "price": product.price,
+                    "warehouse_qty": product.warehouse_qty,
+                    "shop_qty": product.shop_qty,
+                    "available_total": product.get_total_qty(),
+                    "category": product.category,
+                    "sku": product.sku,
+                    "min_stock_level": product.min_stock_level,
+                    "is_low_stock": product.is_low_stock(),
+                    "stock_status": product.get_stock_status(),
+                })
+        return products
+
+    def search_products(self, query: str) -> List[Dict]:
+        """Produkte nach Name, SKU oder Beschreibung durchsuchen"""
+        query_lower = query.lower()
+        results = []
+        
+        for product in self.get_all_products():
+            if (query_lower in product.name.lower() or 
+                query_lower in (product.sku or "").lower() or
+                query_lower in (product.description or "").lower()):
+                results.append({
+                    "id": product.id,
+                    "name": product.name,
+                    "description": product.description,
+                    "price": product.price,
+                    "warehouse_qty": product.warehouse_qty,
+                    "shop_qty": product.shop_qty,
+                    "available_total": product.get_total_qty(),
+                    "category": product.category,
+                    "sku": product.sku,
+                    "min_stock_level": product.min_stock_level,
+                    "is_low_stock": product.is_low_stock(),
+                    "stock_status": product.get_stock_status(),
+                })
+        
+        return results
+
 
     def get_low_stock_count(self) -> int:
         """Anzahl Produkte mit kritischem Lagerbestand"""

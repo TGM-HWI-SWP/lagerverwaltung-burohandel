@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-4">
+  <h3 class="mb-0">🏷️ Kategorie: {{ selected_category }}</h3>
+  <a href="{{ url_for('suche') }}" class="btn btn-secondary">Alle anzeigen</a>
+</div>
+
+<!-- Category Filter -->
+<div class="mb-4 pb-3 border-bottom">
+  <small class="text-muted mb-2 d-block">Andere Kategorien:</small>
+  <div class="d-flex flex-wrap gap-2">
+    {% for category in categories %}
+      <a href="{{ url_for('kategorie', category=category) }}" 
+         class="btn btn-sm {% if category == selected_category %}btn-primary{% else %}btn-outline-primary{% endif %}">
+        {{ category }}
+      </a>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- Results -->
+{% if products %}
+  <div class="alert alert-info">
+    <strong>{{ products|length }}</strong> Produkt(e) in dieser Kategorie
+  </div>
+
+  <!-- View Options -->
+  <ul class="nav nav-tabs mb-4" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" id="table-tab" data-bs-toggle="tab" data-bs-target="#table-view" type="button" role="tab">
+        📋 Tabellenansicht
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="card-tab" data-bs-toggle="tab" data-bs-target="#card-view" type="button" role="tab">
+        🎴 Kartenansicht
+      </button>
+    </li>
+  </ul>
+
+  <div class="tab-content">
+    <!-- Table View -->
+    <div class="tab-pane fade show active" id="table-view" role="tabpanel">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <table class="table table-striped align-middle">
+            <thead>
+              <tr>
+                <th>Produkt</th>
+                <th class="text-end">Preis</th>
+                <th class="text-end">Lager</th>
+                <th class="text-end">Shop</th>
+                <th class="text-end">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for p in products %}
+              <tr {% if p.is_low_stock %}class="table-warning"{% endif %}>
+                <td>
+                  <strong>{{ p.name }}</strong><br>
+                  <small class="text-muted">{{ p.sku }} • {{ p.description[:40] }}...</small>
+                </td>
+                <td class="text-end">{{ "%.2f"|format(p.price) }} €</td>
+                <td class="text-end">
+                  <span class="badge {% if p.warehouse_qty > 0 %}bg-success{% else %}bg-secondary{% endif %}">
+                    {{ p.warehouse_qty }}
+                  </span>
+                </td>
+                <td class="text-end">
+                  <span class="badge {% if p.shop_qty > 0 %}bg-info{% else %}bg-secondary{% endif %}">
+                    {{ p.shop_qty }}
+                  </span>
+                </td>
+                <td class="text-end">
+                  {% if p.is_low_stock %}
+                    <span class="badge bg-danger">⚠️ Kritisch</span>
+                  {% else %}
+                    <span class="badge bg-success">✓ OK</span>
+                  {% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card View -->
+    <div class="tab-pane fade" id="card-view" role="tabpanel">
+      <div class="row">
+        {% for p in products %}
+        <div class="col-md-4 mb-3">
+          <div class="card h-100 {% if p.is_low_stock %}border-warning{% endif %}">
+            <div class="card-body">
+              <h6 class="card-title">{{ p.name }}</h6>
+              <p class="text-muted small mb-2">{{ p.sku }}</p>
+              <p class="mb-3">{{ p.description[:60] }}...</p>
+              
+              <div class="mb-3">
+                <strong>{{ "%.2f"|format(p.price) }} €</strong>
+              </div>
+
+              <!-- Bestand visualisierung -->
+              <div class="mb-2">
+                <small class="d-block text-muted mb-1">Lager: {{ p.warehouse_qty }}</small>
+                <div class="progress" style="height: 8px;">
+                  {% set usage = (p.warehouse_qty / 100 * 100)|int if p.warehouse_qty < 100 else 100 %}
+                  <div class="progress-bar {% if p.is_low_stock %}bg-danger{% elif p.warehouse_qty < 50 %}bg-warning{% else %}bg-success{% endif %}" 
+                       style="width: {{ usage if usage > 10 else 10 }}%"></div>
+                </div>
+              </div>
+
+              <div>
+                <small class="d-block text-muted mb-1">Shop: {{ p.shop_qty }}</small>
+                <div class="progress" style="height: 8px;">
+                  {% set shop_usage = (p.shop_qty / 100 * 100)|int if p.shop_qty < 100 else 100 %}
+                  <div class="progress-bar bg-info" style="width: {{ shop_usage if shop_usage > 10 else 10 }}%"></div>
+                </div>
+              </div>
+
+              {% if p.is_low_stock %}
+              <div class="alert alert-warning mt-3 mb-0 p-2">
+                <small>⚠️ Kritischer Bestand</small>
+              </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+{% else %}
+  <div class="alert alert-warning">
+    ❌ Keine Produkte in dieser Kategorie
+  </div>
+{% endif %}
+
+{% endblock %}

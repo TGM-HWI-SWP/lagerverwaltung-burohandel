@@ -9,13 +9,26 @@
 <body class="bg-light">
 
 <nav class="navbar navbar-dark bg-dark">
-  <div class="container d-flex justify-content-between">
-    <a class="navbar-brand" href="{{ url_for('index') }}">Lagerverwaltung</a>
-    <div class="d-flex gap-2">
-      <a class="btn btn-outline-light btn-sm" href="{{ url_for('lager') }}">Lager</a>
-      <a class="btn btn-outline-light btn-sm" href="{{ url_for('shop') }}">Shop</a>
-      <a class="btn btn-outline-light btn-sm" href="{{ url_for('low_stock') }}">⚠️ Alert</a>
-      <a class="btn btn-outline-light btn-sm" href="{{ url_for('bestellung') }}">Neue Bestellung</a>
+  <div class="container-fluid d-flex justify-content-between">
+    <a class="navbar-brand" href="{{ url_for('index') }}">📦 Lagerverwaltung</a>
+    <div class="d-flex gap-2 flex-wrap align-items-center justify-content-end">
+      <a class="btn btn-outline-light btn-sm" href="{{ url_for('index') }}" title="Dashboard">📊 Dashboard</a>
+      <a class="btn btn-outline-light btn-sm" href="{{ url_for('lager') }}" title="Lager">📦 Lager</a>
+      <a class="btn btn-outline-light btn-sm" href="{{ url_for('shop') }}" title="Shop">🛒 Shop</a>
+      <a class="btn btn-outline-light btn-sm" href="{{ url_for('suche') }}" title="Suche">🔍 Suche</a>
+      
+      <div class="btn-group" role="group" title="Operationen">
+        <button type="button" class="btn btn-outline-light btn-sm dropdown-toggle" data-bs-toggle="dropdown">
+          ⚙️ Ops
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end">
+          <li><a class="dropdown-item" href="{{ url_for('einkauf') }}">📥 Einkauf</a></li>
+          <li><a class="dropdown-item" href="{{ url_for('transfer') }}">↔️ Transfer</a></li>
+          <li><a class="dropdown-item" href="{{ url_for('verkauf') }}">🛍️ Verkauf</a></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item" href="{{ url_for('low_stock') }}">⚠️ Alert</a></li>
+        </ul>
+      </div>
     </div>
   </div>
 </nav>

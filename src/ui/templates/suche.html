@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block content %}
+<h3 class="mb-4">🔍 Produktsuche</h3>
+
+<div class="card shadow-sm mb-4">
+  <div class="card-body">
+    <form method="get" action="{{ url_for('suche') }}" class="d-flex gap-2">
+      <input type="text" class="form-control" name="q" placeholder="Nach Produktname, SKU oder Beschreibung suchen..." value="{{ query }}" autofocus>
+      <button type="submit" class="btn btn-primary">Suchen</button>
+      {% if query %}
+        <a href="{{ url_for('suche') }}" class="btn btn-secondary">Zurücksetzen</a>
+      {% endif %}
+    </form>
+  </div>
+</div>
+
+<!-- Category Filter -->
+<div class="mb-4">
+  <div class="btn-group" role="group">
+    <a href="{{ url_for('suche') }}" class="btn btn-outline-secondary {% if not query %}active{% endif %}">Alle Kategorien</a>
+    {% for category in categories %}
+      <a href="{{ url_for('suche') }}?q={{ category }}" class="btn btn-outline-secondary">{{ category }}</a>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- Results -->
+{% if query %}
+  {% if products %}
+    <div class="alert alert-info">
+      Es wurden <strong>{{ products|length }}</strong> Produkt(e) gefunden für "{{ query }}"
+    </div>
+
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <table class="table table-striped align-middle">
+          <thead>
+            <tr>
+              <th>Produkt</th>
+              <th class="text-end">SKU</th>
+              <th class="text-end">Kategorie</th>
+              <th class="text-end">Preis</th>
+              <th class="text-end">Lager</th>
+              <th class="text-end">Shop</th>
+              <th class="text-end">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for p in products %}
+            <tr {% if p.is_low_stock %}class="table-warning"{% endif %}>
+              <td>
+                <strong>{{ p.name }}</strong><br>
+                <small class="text-muted">{{ p.description[:50] }}...</small>
+              </td>
+              <td class="text-end"><small>{{ p.sku }}</small></td>
+              <td class="text-end"><span class="badge bg-light text-dark">{{ p.category }}</span></td>
+              <td class="text-end">{{ "%.2f"|format(p.price) }} €</td>
+              <td class="text-end">
+                <span class="badge {% if p.warehouse_qty > 0 %}bg-success{% else %}bg-secondary{% endif %}">
+                  {{ p.warehouse_qty }}
+                </span>
+              </td>
+              <td class="text-end">
+                <span class="badge {% if p.shop_qty > 0 %}bg-info{% else %}bg-secondary{% endif %}">
+                  {{ p.shop_qty }}
+                </span>
+              </td>
+              <td class="text-end">
+                {% if p.is_low_stock %}
+                  <span class="badge bg-danger">⚠️ Kritisch</span>
+                {% else %}
+                  <span class="badge bg-success">✓ OK</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  {% else %}
+    <div class="alert alert-warning">
+      ❌ Keine Produkte gefunden für "{{ query }}"<br>
+      <small>Versuchen Sie einen anderen Suchbegriff</small>
+    </div>
+  {% endif %}
+{% else %}
+  <div class="alert alert-light">
+    📝 Geben Sie einen Suchbegriff ein oder wählen Sie eine Kategorie um Produkte zu finden
+  </div>
+{% endif %}
+
+{% endblock %}

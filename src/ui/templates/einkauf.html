@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-4">
+  <h3 class="mb-0">📥 Einkauf von Lieferanten</h3>
+  <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">← Zurück</a>
+</div>
+
+<div class="row">
+  <div class="col-lg-8">
+    <div class="card shadow-sm">
+      <div class="card-header bg-primary text-white">
+        <h6 class="mb-0">Neuen Einkauf erfassen</h6>
+      </div>
+      <div class="card-body">
+        <form method="POST" id="einkaufForm">
+          <div class="mb-3">
+            <label class="form-label" for="product">📦 Produkt</label>
+            <select class="form-select form-select-lg" id="product" name="product_id" required onchange="updateProductInfo()">
+              <option value="">-- Produkt wählen --</option>
+              {% for p in products %}
+                <option value="{{ p.id }}" data-sku="{{ p.sku }}" data-category="{{ p.category }}" data-warehouse="{{ p.warehouse_qty }}">
+                  {{ p.name }} ({{ p.sku }})
+                </option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label" for="quantity">📊 Einkaufsmenge</label>
+              <input class="form-control form-control-lg" id="quantity" type="number" min="1" name="quantity" placeholder="Wieviel bestellen?" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label" for="reason">💭 Grund (optional)</label>
+              <input class="form-control" id="reason" type="text" name="reason" placeholder="z.B. Lieferant ABC, Nachbestellung...">
+            </div>
+          </div>
+
+          <div class="d-grid gap-2 d-sm-flex">
+            <button class="btn btn-primary btn-lg" type="submit">
+              ✅ Einkauf bestätigen
+            </button>
+            <a class="btn btn-outline-secondary" href="{{ url_for('index') }}">Abbrechen</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-4">
+    <div class="card">
+      <div class="card-header bg-light">
+        <h6 class="mb-0">📋 Produktinfo</h6>
+      </div>
+      <div class="card-body">
+        <div id="productInfo" style="display: none;">
+          <p><strong>SKU:</strong> <span id="infoSKU">-</span></p>
+          <p><strong>Kategorie:</strong> <span id="infoCategory">-</span></p>
+          <p><strong>Aktueller Bestand im Lager:</strong> <span id="infoWarehouse" class="badge bg-info">0</span></p>
+        </div>
+        <div id="noProduct" class="text-muted">
+          Wählen Sie ein Produkt um Details zu sehen
+        </div>
+      </div>
+    </div>
+
+    <div class="card mt-3">
+      <div class="card-header bg-light">
+        <h6 class="mb-0">💡 Tipps</h6>
+      </div>
+      <div class="card-body small">
+        <ul class="mb-0">
+          <li>Einkäufe erhöhen den Lagerbestand</li>
+          <li>Mit "Transfer" können Sie zwischen Lager und Shop verschieben</li>
+          <li>Mit "Verkauf" werden Produkte verkauft</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function updateProductInfo() {
+  const select = document.getElementById('product');
+  const selected = select.options[select.selectedIndex];
+  const productInfo = document.getElementById('productInfo');
+  const noProduct = document.getElementById('noProduct');
+  
+  if (!selected.value) {
+    productInfo.style.display = 'none';
+    noProduct.style.display = 'block';
+    return;
+  }
+
+  productInfo.style.display = 'block';
+  noProduct.style.display = 'none';
+  
+  document.getElementById('infoSKU').textContent = selected.dataset.sku || '-';
+  document.getElementById('infoCategory').textContent = selected.dataset.category || '-';
+  document.getElementById('infoWarehouse').textContent = selected.dataset.warehouse || '0';
+}
+</script>
+
+{% endblock %}

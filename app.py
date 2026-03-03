@@ -42,8 +42,28 @@ def create_app(db_path: str = "warehouse.db") -> Flask:
 
     @app.route("/")
     def index():
-        """Startseite"""
-        return render_template("index.html")
+        """Dashboard mit Statistiken"""
+        stats = app.warehouse_service.get_dashboard_stats()
+        return render_template("dashboard.html", stats=stats)
+
+    @app.route("/suche", methods=["GET"])
+    def suche():
+        """Produktsuche"""
+        query = request.args.get("q", "").strip()
+        products = []
+        categories = app.warehouse_service.get_product_categories()
+        
+        if query:
+            products = app.warehouse_service.search_products(query)
+        
+        return render_template("suche.html", products=products, query=query, categories=categories)
+
+    @app.route("/kategorie/<category>")
+    def kategorie(category):
+        """Produkte nach Kategorie filtern"""
+        products = app.warehouse_service.get_products_by_category(category)
+        categories = app.warehouse_service.get_product_categories()
+        return render_template("kategorie.html", products=products, selected_category=category, categories=categories)
 
     @app.route("/lager")
     def lager():
@@ -64,60 +84,102 @@ def create_app(db_path: str = "warehouse.db") -> Flask:
         products = app.warehouse_service.get_products_with_totals()
         return render_template("shop.html", products=products)
 
-    @app.route("/bestellung", methods=["GET", "POST"])
-    def bestellung():
-        """Bestellungsformular"""
+    @app.route("/einkauf", methods=["GET", "POST"])
+    def einkauf():
+        """Einkauf von Lieferanten - neue Produkte ins Lager"""
         if request.method == "POST":
             product_id = request.form.get("product_id")
             try:
-                amount = int(request.form.get("amount", 0))
+                quantity = int(request.form.get("quantity", 0))
             except ValueError:
                 flash("Ungültige Menge", "danger")
-                return redirect(url_for("bestellung"))
+                return redirect(url_for("einkauf"))
 
-            if amount <= 0:
+            if quantity <= 0:
                 flash("Menge muss größer als 0 sein", "danger")
-                return redirect(url_for("bestellung"))
+                return redirect(url_for("einkauf"))
 
-            # Bestellung ausführen
-            success = app.warehouse_service.create_order(product_id, amount)
+            reason = request.form.get("reason", "")
+            success = app.warehouse_service.create_purchase(product_id, quantity, reason)
 
             if success:
                 product = app.warehouse_service.get_product(product_id)
-                flash(f"Bestellung erfolgreich: {amount}x {product.name}", "success")
+                flash(f"✅ Einkauf erfolgreich: {quantity}x {product.name} ins Lager", "success")
                 return redirect(url_for("index"))
             else:
-                flash("Bestellung fehlgeschlagen - Nicht genug Bestand", "danger")
-                return redirect(url_for("bestellung"))
+                flash("Einkauf fehlgeschlagen", "danger")
+                return redirect(url_for("einkauf"))
 
-        # GET-Request: Formular anzeigen
         products = app.warehouse_service.get_products_with_totals()
-        return render_template("bestellung.html", products=products)
+        return render_template("einkauf.html", products=products)
 
-    @app.route("/transfer_to_shop", methods=["POST"])
-    def transfer_to_shop():
-        """Produkt vom Lager in den Shop transferieren"""
-        product_id = request.form.get("product_id")
-        try:
-            amount = int(request.form.get("amount", 0))
-        except ValueError:
-            flash("Ungültige Menge", "danger")
-            return redirect(url_for("lager"))
+    @app.route("/transfer", methods=["GET", "POST"])
+    def transfer():
+        """Transfer zwischen Lager und Shop"""
+        if request.method == "POST":
+            product_id = request.form.get("product_id")
+            quantity = int(request.form.get("quantity", 0))
+            direction = request.form.get("direction")  # "to_shop" oder "to_warehouse"
 
-        if amount <= 0:
-            flash("Menge muss größer als 0 sein", "danger")
-            return redirect(url_for("lager"))
+            if quantity <= 0:
+                flash("Menge muss größer als 0 sein", "danger")
+                return redirect(url_for("transfer"))
 
-        # Transfer ausführen
-        success = app.warehouse_service.transfer_to_shop(product_id, amount)
+            if direction == "to_shop":
+                success = app.warehouse_service.transfer_to_shop(product_id, quantity)
+                if success:
+                    product = app.warehouse_service.get_product(product_id)
+                    flash(f"✅ Transfer erfolgreich: {quantity}x {product.name} zum Shop", "success")
+                else:
+                    flash("Transfer fehlgeschlagen - Nicht genug Bestand im Lager", "danger")
+            elif direction == "to_warehouse":
+                success = app.warehouse_service.transfer_to_warehouse(product_id, quantity)
+                if success:
+                    product = app.warehouse_service.get_product(product_id)
+                    flash(f"✅ Transfer erfolgreich: {quantity}x {product.name} zum Lager", "success")
+                else:
+                    flash("Transfer fehlgeschlagen - Nicht genug Bestand im Shop", "danger")
+            else:
+                flash("Ungültige Richtung", "danger")
 
-        if success:
-            product = app.warehouse_service.get_product(product_id)
-            flash(f"Transfer erfolgreich: {amount}x {product.name} zum Shop", "success")
-        else:
-            flash("Transfer fehlgeschlagen - Nicht genug Bestand im Lager", "danger")
+            return redirect(url_for("transfer"))
 
-        return redirect(url_for("lager"))
+        products = app.warehouse_service.get_products_with_totals()
+        return render_template("transfer.html", products=products)
+
+    @app.route("/verkauf", methods=["GET", "POST"])
+    def verkauf():
+        """Kundenverkauf - Produkte aus dem Shop"""
+        if request.method == "POST":
+            product_id = request.form.get("product_id")
+            try:
+                quantity = int(request.form.get("quantity", 0))
+            except ValueError:
+                flash("Ungültige Menge", "danger")
+                return redirect(url_for("verkauf"))
+
+            if quantity <= 0:
+                flash("Menge muss größer als 0 sein", "danger")
+                return redirect(url_for("verkauf"))
+
+            reason = request.form.get("reason", "")
+            success = app.warehouse_service.sell_product(product_id, quantity, reason)
+
+            if success:
+                product = app.warehouse_service.get_product(product_id)
+                flash(f"✅ Verkauf erfolgreich: {quantity}x {product.name}", "success")
+                return redirect(url_for("index"))
+            else:
+                flash("Verkauf fehlgeschlagen - Nicht genug Bestand im Shop", "danger")
+                return redirect(url_for("verkauf"))
+
+        products = app.warehouse_service.get_products_with_totals()
+        return render_template("verkauf.html", products=products)
+
+    @app.route("/bestellung", methods=["GET", "POST"])
+    def bestellung():
+        """DEPRECATED: use /verkauf instead"""
+        return redirect(url_for("verkauf"))
 
     return app
 

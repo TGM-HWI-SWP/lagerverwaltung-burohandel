@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-4">
+  <h3 class="mb-0">↔️ Transfer zwischen Lager und Shop</h3>
+  <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">← Zurück</a>
+</div>
+
+<div class="row">
+  <div class="col-lg-8">
+    <div class="card shadow-sm">
+      <div class="card-header bg-info text-white">
+        <h6 class="mb-0">Produkt transferieren</h6>
+      </div>
+      <div class="card-body">
+        <form method="POST" id="transferForm">
+          <div class="mb-3">
+            <label class="form-label" for="product">📦 Produkt</label>
+            <select class="form-select form-select-lg" id="product" name="product_id" required onchange="updateProductInfo()">
+              <option value="">-- Produkt wählen --</option>
+              {% for p in products %}
+                <option value="{{ p.id }}" data-warehouse="{{ p.warehouse_qty }}" data-shop="{{ p.shop_qty }}">
+                  {{ p.name }} (Lager: {{ p.warehouse_qty }}, Shop: {{ p.shop_qty }})
+                </option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">🔄 Transferrichtung</label>
+            <div class="btn-group w-100" role="group">
+              <input type="radio" class="btn-check" name="direction" id="to_shop" value="to_shop" required onchange="updateDirection('to_shop')">
+              <label class="btn btn-outline-success" for="to_shop">
+                → Zum Shop
+              </label>
+
+              <input type="radio" class="btn-check" name="direction" id="to_warehouse" value="to_warehouse" required onchange="updateDirection('to_warehouse')">
+              <label class="btn btn-outline-warning" for="to_warehouse">
+                ← Zum Lager
+              </label>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label" for="quantity">📊 Menge</label>
+            <input class="form-control form-control-lg" id="quantity" type="number" min="1" name="quantity" placeholder="Wieviel transferieren?" required>
+            <small id="quantityHelp" class="form-text text-muted">Verfügbar: <span id="availableQty">0</span></small>
+          </div>
+
+          <div class="d-grid gap-2 d-sm-flex">
+            <button class="btn btn-info btn-lg" type="submit">
+              ✅ Transfer bestätigen
+            </button>
+            <a class="btn btn-outline-secondary" href="{{ url_for('index') }}">Abbrechen</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-4">
+    <div class="card">
+      <div class="card-header bg-light">
+        <h6 class="mb-0">📊 Bestandsinfo</h6>
+      </div>
+      <div class="card-body">
+        <div id="stockInfo" style="display: none;">
+          <div class="mb-3">
+            <strong>Lager:</strong>
+            <div class="progress mb-2">
+              <div id="warehouseBar" class="progress-bar bg-info" style="width: 0%"></div>
+            </div>
+            <small><span id="warehouseQty">0</span> Stück</small>
+          </div>
+
+          <div class="mb-3">
+            <strong>Shop:</strong>
+            <div class="progress mb-2">
+              <div id="shopBar" class="progress-bar bg-success" style="width: 0%"></div>
+            </div>
+            <small><span id="shopQty">0</span> Stück</small>
+          </div>
+
+          <div class="alert alert-info mb-0 small">
+            <strong id="transferTip">💡 Wählen Sie eine Richtung</strong>
+          </div>
+        </div>
+        <div id="noProduct" class="text-muted">
+          Wählen Sie ein Produkt um Bestandsinfo zu sehen
+        </div>
+      </div>
+    </div>
+
+    <div class="card mt-3">
+      <div class="card-header bg-light">
+        <h6 class="mb-0">📋 Warfluss</h6>
+      </div>
+      <div class="card-body small">
+        <p><strong>→ Zum Shop:</strong></p>
+        <ul class="mb-3">
+          <li>Für schnelle Verkäufe</li>
+          <li>Reduziert Lager</li>
+        </ul>
+        <p><strong>← Zum Lager:</strong></p>
+        <ul class="mb-0">
+          <li>Rückholung aus Shop</li>
+          <li>Reduziert Shop</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function updateProductInfo() {
+  const select = document.getElementById('product');
+  const selected = select.options[select.selectedIndex];
+  const stockInfo = document.getElementById('stockInfo');
+  const noProduct = document.getElementById('noProduct');
+  
+  if (!selected.value) {
+    stockInfo.style.display = 'none';
+    noProduct.style.display = 'block';
+    return;
+  }
+
+  stockInfo.style.display = 'block';
+  noProduct.style.display = 'none';
+  
+  const warehouse = parseInt(selected.dataset.warehouse) || 0;
+  const shop = parseInt(selected.dataset.shop) || 0;
+  const total = warehouse + shop;
+  
+  document.getElementById('warehouseQty').textContent = warehouse;
+  document.getElementById('shopQty').textContent = shop;
+  
+  const warehousePercent = total > 0 ? (warehouse / total * 100) : 0;
+  const shopPercent = total > 0 ? (shop / total * 100) : 0;
+  
+  document.getElementById('warehouseBar').style.width = warehousePercent + '%';
+  document.getElementById('shopBar').style.width = shopPercent + '%';
+  
+  updateDirection(document.querySelector('input[name="direction"]:checked')?.value);
+}
+
+function updateDirection(direction) {
+  const select = document.getElementById('product');
+  const selected = select.options[select.selectedIndex];
+  
+  if (!selected.value) return;
+  
+  const warehouse = parseInt(selected.dataset.warehouse) || 0;
+  const shop = parseInt(selected.dataset.shop) || 0;
+  
+  const quantityInput = document.getElementById('quantity');
+  const availableQty = document.getElementById('availableQty');
+  const transferTip = document.getElementById('transferTip');
+  
+  if (direction === 'to_shop') {
+    quantityInput.max = warehouse;
+    availableQty.textContent = warehouse;
+    transferTip.textContent = `💡 Verfügbar im Lager: ${warehouse} Stück`;
+  } else if (direction === 'to_warehouse') {
+    quantityInput.max = shop;
+    availableQty.textContent = shop;
+    transferTip.textContent = `💡 Verfügbar im Shop: ${shop} Stück`;
+  }
+}
+
+document.getElementById('transferForm').addEventListener('submit', function(e) {
+  const quantity = parseInt(document.getElementById('quantity').value);
+  const available = parseInt(document.getElementById('availableQty').textContent);
+  
+  if (quantity > available) {
+    e.preventDefault();
+    alert(`Ungültige Menge! Verfügbar: ${available} Stück`);
+    return false;
+  }
+});
+</script>
+
+{% endblock %}
