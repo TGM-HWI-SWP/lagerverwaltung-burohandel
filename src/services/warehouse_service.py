@@ -330,6 +330,7 @@ class WarehouseService:
         
         # Top Kategorien (nach Anzahl Produkte)
         top_categories = sorted(categories.items(), key=lambda x: x[1], reverse=True)[:5]
+        all_categories = sorted(categories.keys())
         
         # Höchster Wert Produkt
         most_valuable = max(products.values(), key=lambda p: p.get_total_value()) if products else None
@@ -343,6 +344,7 @@ class WarehouseService:
             "warehouse_product_count": sum(1 for p in products.values() if p.warehouse_qty > 0),
             "shop_product_count": sum(1 for p in products.values() if p.shop_qty > 0),
             "top_categories": top_categories,
+            "categories": all_categories,
             "most_valuable_product": most_valuable,
             "low_stock_products": low_stock_products[:5],  # Top 5 kritische Produkte
         }

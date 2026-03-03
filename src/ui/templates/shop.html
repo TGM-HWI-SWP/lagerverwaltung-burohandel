@@ -1,29 +1,40 @@
 {% extends "base.html" %}
 {% block content %}
-<h3 class="mb-3">Shop</h3>
+<div class="d-flex align-items-center justify-content-between mb-4">
+  <h3 class="mb-0">Shop Inventory</h3>
+  <a class="btn btn-primary" href="{{ url_for('verkauf') }}">
+    <i class="bi bi-credit-card"></i> New Sale
+  </a>
+</div>
 
-<div class="card shadow-sm">
-  <div class="card-body">
-    <table class="table table-striped align-middle">
+<div class="card">
+  <div class="card-body p-0">
+    <table class="table table-hover align-middle mb-0">
       <thead>
         <tr>
-          <th>Produkt</th>
-          <th class="text-end">Menge im Shop</th>
-          <th class="text-end">Verfügbar gesamt</th>
+          <th>Product Name</th>
+          <th class="text-end">In Shop</th>
+          <th class="text-end">Unit Price</th>
+          <th class="text-end">Total Value</th>
         </tr>
       </thead>
       <tbody>
         {% for p in products %}
         <tr>
-          <td>{{ p.name }}</td>
-          <td class="text-end">{{ p.shop_qty }}</td>
-          <td class="text-end">{{ p.available_total }}</td>
+          <td>
+            <strong>{{ p.name }}</strong><br>
+            <small class="text-muted">{{ p.sku }}</small>
+          </td>
+          <td class="text-end">
+            <span class="badge bg-primary">{{ p.shop_qty }}</span>
+          </td>
+          <td class="text-end">€ {{ "%.2f"|format(p.price) }}</td>
+          <td class="text-end fw-bold">€ {{ "%.2f"|format(p.shop_qty * p.price) }}</td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
-
-    <a class="btn btn-success" href="{{ url_for('bestellung') }}">Neue Bestellung</a>
   </div>
 </div>
+
 {% endblock %}

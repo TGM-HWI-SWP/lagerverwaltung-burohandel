@@ -1,13 +1,17 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="d-flex align-items-center justify-content-between mb-4">
-  <h3 class="mb-0">🏷️ Kategorie: {{ selected_category }}</h3>
-  <a href="{{ url_for('suche') }}" class="btn btn-secondary">Alle anzeigen</a>
+  <h3 class="mb-0">
+    <i class="bi bi-tag"></i> Category: {{ selected_category }}
+  </h3>
+  <a href="{{ url_for('suche') }}" class="btn btn-outline-secondary">
+    <i class="bi bi-arrow-left"></i> All Products
+  </a>
 </div>
 
 <!-- Category Filter -->
 <div class="mb-4 pb-3 border-bottom">
-  <small class="text-muted mb-2 d-block">Andere Kategorien:</small>
+  <small class="text-muted mb-2 d-block">Browse other categories:</small>
   <div class="d-flex flex-wrap gap-2">
     {% for category in categories %}
       <a href="{{ url_for('kategorie', category=category) }}" 
@@ -21,19 +25,19 @@
 <!-- Results -->
 {% if products %}
   <div class="alert alert-info">
-    <strong>{{ products|length }}</strong> Produkt(e) in dieser Kategorie
+    <i class="bi bi-info-circle"></i> <strong>{{ products|length }}</strong> product(s) in this category
   </div>
 
   <!-- View Options -->
   <ul class="nav nav-tabs mb-4" role="tablist">
     <li class="nav-item" role="presentation">
       <button class="nav-link active" id="table-tab" data-bs-toggle="tab" data-bs-target="#table-view" type="button" role="tab">
-        📋 Tabellenansicht
+        <i class="bi bi-table"></i> Table View
       </button>
     </li>
     <li class="nav-item" role="presentation">
       <button class="nav-link" id="card-tab" data-bs-toggle="tab" data-bs-target="#card-view" type="button" role="tab">
-        🎴 Kartenansicht
+        <i class="bi bi-grid-3x3-gap"></i> Card View
       </button>
     </li>
   </ul>
@@ -41,13 +45,13 @@
   <div class="tab-content">
     <!-- Table View -->
     <div class="tab-pane fade show active" id="table-view" role="tabpanel">
-      <div class="card shadow-sm">
-        <div class="card-body">
-          <table class="table table-striped align-middle">
+      <div class="card">
+        <div class="card-body p-0">
+          <table class="table table-hover align-middle mb-0">
             <thead>
               <tr>
-                <th>Produkt</th>
-                <th class="text-end">Preis</th>
+                <th>Product</th>
+                <th class="text-end">Price</th>
                 <th class="text-end">Lager</th>
                 <th class="text-end">Shop</th>
                 <th class="text-end">Status</th>

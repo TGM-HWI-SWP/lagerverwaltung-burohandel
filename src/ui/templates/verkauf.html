@@ -1,53 +1,168 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="d-flex align-items-center justify-content-between mb-4">
-  <h3 class="mb-0">🛍️ Kundenverkauf</h3>
-  <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">← Zurück</a>
+  <h3 class="mb-0">Customer Sales</h3>
+  <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">
+    <i class="bi bi-arrow-left"></i> Back
+  </a>
 </div>
 
 <div class="row">
   <div class="col-lg-8">
-    <div class="card shadow-sm">
-      <div class="card-header bg-success text-white">
-        <h6 class="mb-0">Verkauf erfassen</h6>
+    <div class="card">
+      <div class="card-header">
+        <i class="bi bi-credit-card"></i> Record Sale
       </div>
       <div class="card-body">
         <form method="POST" id="verkaufForm">
           <div class="mb-3">
-            <label class="form-label" for="product">🛒 Produkt</label>
-            <select class="form-select form-select-lg" id="product" name="product_id" required onchange="updateProductInfo()">
-              <option value="">-- Produkt wählen --</option>
+            <label class="form-label" for="product">
+              <i class="bi bi-bag"></i> Product
+            </label>
+            <select class="form-select" id="product" name="product_id" required onchange="updateProductInfo()">
+              <option value="">-- Select Product --</option>
               {% for p in products %}
-                <option value="{{ p.id }}" data-warehouse="{{ p.warehouse_qty }}" data-shop="{{ p.shop_qty }}" data-price="{{ p.price }}" data-sku="{{ p.sku }}" data-desc="{{ p.description }}">
-                  {{ p.name }} (Shop: {{ p.shop_qty }})
+                <option value="{{ p.id }}" data-warehouse="{{ p.warehouse_qty }}" data-shop="{{ p.shop_qty }}" data-price="{{ p.price }}" data-sku="{{ p.sku }}" data-name="{{ p.name }}">
+                  {{ p.name }} (Available: {{ p.shop_qty }})
                 </option>
               {% endfor %}
             </select>
             <small class="form-text text-muted">
-              Verfügbar im Shop: <span id="available-qty" class="badge bg-success">0</span> Stück
+              Available in shop: <span id="available-qty" class="badge bg-success">0</span> units
             </small>
           </div>
 
           <div class="row">
             <div class="col-md-6 mb-3">
-              <label class="form-label" for="quantity">📊 Verkaufsmenge</label>
-              <input class="form-control form-control-lg" id="quantity" type="number" min="1" name="quantity" placeholder="Wieviel?" required>
+              <label class="form-label" for="quantity">
+                <i class="bi bi-123"></i> Quantity
+              </label>
+              <input class="form-control" id="quantity" type="number" min="1" name="quantity" placeholder="How many?" required>
             </div>
             <div class="col-md-6 mb-3">
-              <label class="form-label" for="reason">💭 Grund (optional)</label>
-              <input class="form-control" id="reason" type="text" name="reason" placeholder="z.B. Kundenname, Bestellnr...">
+              <label class="form-label" for="reason">
+                <i class="bi bi-chat-left-text"></i> Reason (Optional)
+              </label>
+              <input class="form-control" id="reason" type="text" name="reason" placeholder="e.g., Customer name, Order #">
             </div>
           </div>
 
           <!-- Price calculation -->
-          <div id="priceInfo" class="alert alert-info" style="display: none;">
+          <div id="priceInfo" class="alert alert-success mb-3" style="display: none;">
             <div class="d-flex justify-content-between align-items-center">
               <div>
-                <span id="priceQuantity">0</span>x à <span id="priceUnit">0</span> € = 
+                <span id="priceQuantity">0</span>x @ <span id="priceUnit">0</span> € =
               </div>
-              <strong style="font-size: 1.3rem;">
+              <strong style="font-size: 1.5rem;">
                 <span id="priceTotal">0</span> €
               </strong>
+            </div>
+          </div>
+
+          <div class="d-grid gap-2">
+            <button class="btn btn-success btn-lg" type="submit">
+              <i class="bi bi-check-circle"></i> Confirm Sale
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-4">
+    <div class="card mb-3">
+      <div class="card-header">
+        <i class="bi bi-info-circle"></i> Product Details
+      </div>
+      <div class="card-body small">
+        <div id="productInfo" style="display: none;">
+          <div class="mb-3">
+            <span class="stat-label">SKU</span>
+            <div class="fw-bold" id="infoSKU">-</div>
+          </div>
+          <div class="mb-3">
+            <span class="stat-label">Unit Price</span>
+            <div class="fw-bold" id="infoPrice">-</div>
+          </div>
+          <div class="mb-0">
+            <span class="stat-label">Shop Stock</span>
+            <div>
+              <span class="badge bg-success" id="infoShop">0</span> units
+            </div>
+          </div>
+        </div>
+        <div id="noProduct" class="text-muted">
+          <i class="bi bi-arrow-down"></i> Select a product to view
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <i class="bi bi-lightbulb"></i> Information
+      </div>
+      <div class="card-body small">
+        <ul class="mb-0 ps-3">
+          <li>Sales reduce shop stock</li>
+          <li>Price calculated automatically</li>
+          <li>Stock must be available in shop</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function updateProductInfo() {
+  const select = document.getElementById('product');
+  const selected = select.options[select.selectedIndex];
+  const productInfo = document.getElementById('productInfo');
+  const noProduct = document.getElementById('noProduct');
+  
+  if (!selected.value) {
+    productInfo.style.display = 'none';
+    noProduct.style.display = 'block';
+    document.getElementById('priceInfo').style.display = 'none';
+    return;
+  }
+
+  productInfo.style.display = 'block';
+  noProduct.style.display = 'none';
+  
+  const shop = parseInt(selected.dataset.shop) || 0;
+  const price = parseFloat(selected.dataset.price) || 0;
+  
+  document.getElementById('infoSKU').textContent = selected.dataset.sku || '-';
+  document.getElementById('infoPrice').textContent = '€ ' + price.toFixed(2);
+  document.getElementById('infoShop').textContent = shop;
+  document.getElementById('available-qty').textContent = shop;
+  document.getElementById('quantity').max = shop;
+  
+  updatePrice();
+}
+
+function updatePrice() {
+  const quantityInput = document.getElementById('quantity');
+  const select = document.getElementById('product');
+  const selected = select.options[select.selectedIndex];
+  
+  if (!selected.value || !quantityInput.value) {
+    document.getElementById('priceInfo').style.display = 'none';
+    return;
+  }
+  
+  const quantity = parseInt(quantityInput.value) || 0;
+  const price = parseFloat(selected.dataset.price) || 0;
+  const total = quantity * price;
+  
+  document.getElementById('priceQuantity').textContent = quantity;
+  document.getElementById('priceUnit').textContent = price.toFixed(2);
+  document.getElementById('priceTotal').textContent = total.toFixed(2);
+  document.getElementById('priceInfo').style.display = 'block';
+}
+
+document.getElementById('quantity').addEventListener('input', updatePrice);
+</script>
             </div>
           </div>
 

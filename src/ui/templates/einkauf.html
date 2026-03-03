@@ -1,24 +1,28 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="d-flex align-items-center justify-content-between mb-4">
-  <h3 class="mb-0">📥 Einkauf von Lieferanten</h3>
-  <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">← Zurück</a>
+  <h3 class="mb-0">Purchase from Supplier</h3>
+  <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">
+    <i class="bi bi-arrow-left"></i> Back
+  </a>
 </div>
 
 <div class="row">
   <div class="col-lg-8">
-    <div class="card shadow-sm">
-      <div class="card-header bg-primary text-white">
-        <h6 class="mb-0">Neuen Einkauf erfassen</h6>
+    <div class="card">
+      <div class="card-header">
+        <i class="bi bi-cloud-download"></i> Record Purchase
       </div>
       <div class="card-body">
         <form method="POST" id="einkaufForm">
           <div class="mb-3">
-            <label class="form-label" for="product">📦 Produkt</label>
-            <select class="form-select form-select-lg" id="product" name="product_id" required onchange="updateProductInfo()">
-              <option value="">-- Produkt wählen --</option>
+            <label class="form-label" for="product">
+              <i class="bi bi-box"></i> Product
+            </label>
+            <select class="form-select" id="product" name="product_id" required onchange="updateProductInfo()">
+              <option value="">-- Select Product --</option>
               {% for p in products %}
-                <option value="{{ p.id }}" data-sku="{{ p.sku }}" data-category="{{ p.category }}" data-warehouse="{{ p.warehouse_qty }}">
+                <option value="{{ p.id }}" data-sku="{{ p.sku }}" data-category="{{ p.category }}" data-warehouse="{{ p.warehouse_qty }}" data-price="{{ p.price }}">
                   {{ p.name }} ({{ p.sku }})
                 </option>
               {% endfor %}
@@ -27,20 +31,23 @@
 
           <div class="row">
             <div class="col-md-6 mb-3">
-              <label class="form-label" for="quantity">📊 Einkaufsmenge</label>
-              <input class="form-control form-control-lg" id="quantity" type="number" min="1" name="quantity" placeholder="Wieviel bestellen?" required>
+              <label class="form-label" for="quantity">
+                <i class="bi bi-123"></i> Quantity
+              </label>
+              <input class="form-control" id="quantity" type="number" min="1" name="quantity" placeholder="Enter quantity" required>
             </div>
             <div class="col-md-6 mb-3">
-              <label class="form-label" for="reason">💭 Grund (optional)</label>
-              <input class="form-control" id="reason" type="text" name="reason" placeholder="z.B. Lieferant ABC, Nachbestellung...">
+              <label class="form-label" for="reason">
+                <i class="bi bi-chat-left-text"></i> Reason (Optional)
+              </label>
+              <input class="form-control" id="reason" type="text" name="reason" placeholder="e.g., Supplier ABC, Reorder...">
             </div>
           </div>
 
-          <div class="d-grid gap-2 d-sm-flex">
+          <div class="d-grid gap-2">
             <button class="btn btn-primary btn-lg" type="submit">
-              ✅ Einkauf bestätigen
+              <i class="bi bi-check-circle"></i> Confirm Purchase
             </button>
-            <a class="btn btn-outline-secondary" href="{{ url_for('index') }}">Abbrechen</a>
           </div>
         </form>
       </div>
@@ -48,31 +55,46 @@
   </div>
 
   <div class="col-lg-4">
-    <div class="card">
-      <div class="card-header bg-light">
-        <h6 class="mb-0">📋 Produktinfo</h6>
+    <div class="card mb-3">
+      <div class="card-header">
+        <i class="bi bi-info-circle"></i> Product Details
       </div>
-      <div class="card-body">
+      <div class="card-body small">
         <div id="productInfo" style="display: none;">
-          <p><strong>SKU:</strong> <span id="infoSKU">-</span></p>
-          <p><strong>Kategorie:</strong> <span id="infoCategory">-</span></p>
-          <p><strong>Aktueller Bestand im Lager:</strong> <span id="infoWarehouse" class="badge bg-info">0</span></p>
+          <div class="mb-3">
+            <span class="stat-label">SKU</span>
+            <div class="fw-bold" id="infoSKU">-</div>
+          </div>
+          <div class="mb-3">
+            <span class="stat-label">Category</span>
+            <div class="fw-bold" id="infoCategory">-</div>
+          </div>
+          <div class="mb-3">
+            <span class="stat-label">Price per Unit</span>
+            <div class="fw-bold" id="infoPrice">-</div>
+          </div>
+          <div class="mb-0">
+            <span class="stat-label">Current Warehouse Stock</span>
+            <div>
+              <span class="badge bg-primary" id="infoWarehouse">0</span>
+            </div>
+          </div>
         </div>
         <div id="noProduct" class="text-muted">
-          Wählen Sie ein Produkt um Details zu sehen
+          <i class="bi bi-arrow-down"></i> Select a product to view details
         </div>
       </div>
     </div>
 
-    <div class="card mt-3">
-      <div class="card-header bg-light">
-        <h6 class="mb-0">💡 Tipps</h6>
+    <div class="card">
+      <div class="card-header">
+        <i class="bi bi-lightbulb"></i> Information
       </div>
       <div class="card-body small">
-        <ul class="mb-0">
-          <li>Einkäufe erhöhen den Lagerbestand</li>
-          <li>Mit "Transfer" können Sie zwischen Lager und Shop verschieben</li>
-          <li>Mit "Verkauf" werden Produkte verkauft</li>
+        <ul class="mb-0 ps-3">
+          <li>Purchases increase warehouse stock</li>
+          <li>Use Transfer to move between warehouse and shop</li>
+          <li>Use Sales to process customer purchases</li>
         </ul>
       </div>
     </div>
@@ -97,6 +119,7 @@ function updateProductInfo() {
   
   document.getElementById('infoSKU').textContent = selected.dataset.sku || '-';
   document.getElementById('infoCategory').textContent = selected.dataset.category || '-';
+  document.getElementById('infoPrice').textContent = '€ ' + (parseFloat(selected.dataset.price) || '0').toFixed(2);
   document.getElementById('infoWarehouse').textContent = selected.dataset.warehouse || '0';
 }
 </script>

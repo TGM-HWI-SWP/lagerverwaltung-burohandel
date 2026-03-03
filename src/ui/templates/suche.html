@@ -1,14 +1,18 @@
 {% extends "base.html" %}
 {% block content %}
-<h3 class="mb-4">🔍 Produktsuche</h3>
+<h3 class="mb-4">
+  <i class="bi bi-search"></i> Product Search
+</h3>
 
-<div class="card shadow-sm mb-4">
+<div class="card mb-4">
   <div class="card-body">
     <form method="get" action="{{ url_for('suche') }}" class="d-flex gap-2">
-      <input type="text" class="form-control" name="q" placeholder="Nach Produktname, SKU oder Beschreibung suchen..." value="{{ query }}" autofocus>
-      <button type="submit" class="btn btn-primary">Suchen</button>
+      <input type="text" class="form-control" name="q" placeholder="Search by product name, SKU, or description..." value="{{ query }}" autofocus>
+      <button type="submit" class="btn btn-primary">
+        <i class="bi bi-search"></i> Search
+      </button>
       {% if query %}
-        <a href="{{ url_for('suche') }}" class="btn btn-secondary">Zurücksetzen</a>
+        <a href="{{ url_for('suche') }}" class="btn btn-outline-secondary">Reset</a>
       {% endif %}
     </form>
   </div>
@@ -16,10 +20,12 @@
 
 <!-- Category Filter -->
 <div class="mb-4">
-  <div class="btn-group" role="group">
-    <a href="{{ url_for('suche') }}" class="btn btn-outline-secondary {% if not query %}active{% endif %}">Alle Kategorien</a>
+  <div class="btn-group flex-wrap" role="group">
+    <a href="{{ url_for('suche') }}" class="btn btn-outline-primary {% if not query %}active{% endif %}">
+      All Categories
+    </a>
     {% for category in categories %}
-      <a href="{{ url_for('suche') }}?q={{ category }}" class="btn btn-outline-secondary">{{ category }}</a>
+      <a href="{{ url_for('suche') }}?q={{ category }}" class="btn btn-outline-primary">{{ category }}</a>
     {% endfor %}
   </div>
 </div>
@@ -28,19 +34,19 @@
 {% if query %}
   {% if products %}
     <div class="alert alert-info">
-      Es wurden <strong>{{ products|length }}</strong> Produkt(e) gefunden für "{{ query }}"
+      <i class="bi bi-info-circle"></i> Found <strong>{{ products|length }}</strong> product(s) for "{{ query }}"
     </div>
 
-    <div class="card shadow-sm">
-      <div class="card-body">
-        <table class="table table-striped align-middle">
+    <div class="card">
+      <div class="card-body p-0">
+        <table class="table table-hover align-middle mb-0">
           <thead>
             <tr>
-              <th>Produkt</th>
+              <th>Product</th>
               <th class="text-end">SKU</th>
-              <th class="text-end">Kategorie</th>
-              <th class="text-end">Preis</th>
-              <th class="text-end">Lager</th>
+              <th class="text-end">Category</th>
+              <th class="text-end">Price</th>
+              <th class="text-end">Warehouse</th>
               <th class="text-end">Shop</th>
               <th class="text-end">Status</th>
             </tr>
@@ -50,26 +56,30 @@
             <tr {% if p.is_low_stock %}class="table-warning"{% endif %}>
               <td>
                 <strong>{{ p.name }}</strong><br>
-                <small class="text-muted">{{ p.description[:50] }}...</small>
+                <small class="text-muted">{{ p.description[:50] }}{% if p.description|length > 50 %}...{% endif %}</small>
               </td>
-              <td class="text-end"><small>{{ p.sku }}</small></td>
+              <td class="text-end"><small class="text-muted">{{ p.sku }}</small></td>
               <td class="text-end"><span class="badge bg-light text-dark">{{ p.category }}</span></td>
-              <td class="text-end">{{ "%.2f"|format(p.price) }} €</td>
+              <td class="text-end">€ {{ "%.2f"|format(p.price) }}</td>
               <td class="text-end">
-                <span class="badge {% if p.warehouse_qty > 0 %}bg-success{% else %}bg-secondary{% endif %}">
+                <span class="badge {% if p.warehouse_qty > 0 %}bg-primary{% else %}bg-secondary{% endif %}">
                   {{ p.warehouse_qty }}
                 </span>
               </td>
               <td class="text-end">
-                <span class="badge {% if p.shop_qty > 0 %}bg-info{% else %}bg-secondary{% endif %}">
+                <span class="badge {% if p.shop_qty > 0 %}bg-secondary{% else %}bg-light text-dark{% endif %}">
                   {{ p.shop_qty }}
                 </span>
               </td>
               <td class="text-end">
                 {% if p.is_low_stock %}
-                  <span class="badge bg-danger">⚠️ Kritisch</span>
+                  <span class="badge bg-warning" style="color: #000;">
+                    <i class="bi bi-exclamation-triangle"></i> Low
+                  </span>
                 {% else %}
-                  <span class="badge bg-success">✓ OK</span>
+                  <span class="badge bg-success">
+                    <i class="bi bi-check-circle"></i> OK
+                  </span>
                 {% endif %}
               </td>
             </tr>
