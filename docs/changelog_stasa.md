@@ -1,33 +1,16 @@
-# Changelog - [Name]
+# Changelog - Stasa Stojanovic
 
-Persönliches Changelog für [Name], Rolle: [Rollenbezeichnung]
+Persönliches Changelog für Stasa, Rolle: 1 (Teamführung, Schnittstellen, Quality)
 
 ---
 
-## [v0.1] - 2025-01-20
+## [v0.1] - 29.01.2026
 
 ### Implementiert
-- [Feature/Fix 1]
-- [Feature/Fix 2]
-- [Feature/Fix 3]
-
-### Tests geschrieben
-- test_[name 1]
-- test_[name 2]
-
-### Commits
-```
-- abc1234 Feat: [Beschreibung]
-- def5678 Test: [Beschreibung]
-- ghi9012 Docs: [Beschreibung]
-```
-
-### Mergekonflikt(e)
-- [Datei]: [Kurzbeschreibung und Lösung]
 
 ---
 
-## [v0.2] - [Datum]
+## [v0.2] - 10.02.2026 (noch kein Commit)
 
 ### Implementiert
 - [Feature/Fix 1]
@@ -46,7 +29,7 @@ Persönliches Changelog für [Name], Rolle: [Rollenbezeichnung]
 
 ---
 
-## [v0.3] - [Datum]
+## [v0.3] - 17.02.2026
 
 ### Implementiert
 - [Feature/Fix 1]
