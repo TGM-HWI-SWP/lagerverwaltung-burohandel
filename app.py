@@ -105,7 +105,7 @@ def create_app(db_path: str = "warehouse.db") -> Flask:
 
             if success:
                 product = app.warehouse_service.get_product(product_id)
-                flash(f"✅ Einkauf erfolgreich: {quantity}x {product.name} ins Lager", "success")
+                flash(f"Einkauf erfolgreich: {quantity}x {product.name} ins Lager", "success")
                 return redirect(url_for("index"))
             else:
                 flash("Einkauf fehlgeschlagen", "danger")
@@ -130,14 +130,14 @@ def create_app(db_path: str = "warehouse.db") -> Flask:
                 success = app.warehouse_service.transfer_to_shop(product_id, quantity)
                 if success:
                     product = app.warehouse_service.get_product(product_id)
-                    flash(f"✅ Transfer erfolgreich: {quantity}x {product.name} zum Shop", "success")
+                    flash(f"Transfer erfolgreich: {quantity}x {product.name} zum Shop", "success")
                 else:
                     flash("Transfer fehlgeschlagen - Nicht genug Bestand im Lager", "danger")
             elif direction == "to_warehouse":
                 success = app.warehouse_service.transfer_to_warehouse(product_id, quantity)
                 if success:
                     product = app.warehouse_service.get_product(product_id)
-                    flash(f"✅ Transfer erfolgreich: {quantity}x {product.name} zum Lager", "success")
+                    flash(f"Transfer erfolgreich: {quantity}x {product.name} zum Lager", "success")
                 else:
                     flash("Transfer fehlgeschlagen - Nicht genug Bestand im Shop", "danger")
             else:
@@ -168,7 +168,7 @@ def create_app(db_path: str = "warehouse.db") -> Flask:
 
             if success:
                 product = app.warehouse_service.get_product(product_id)
-                flash(f"✅ Verkauf erfolgreich: {quantity}x {product.name}", "success")
+                flash(f"Verkauf erfolgreich: {quantity}x {product.name}", "success")
                 return redirect(url_for("index"))
             else:
                 flash("Verkauf fehlgeschlagen - Nicht genug Bestand im Shop", "danger")

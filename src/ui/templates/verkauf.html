@@ -168,7 +168,7 @@ document.getElementById('quantity').addEventListener('input', updatePrice);
 
           <div class="d-grid gap-2 d-sm-flex">
             <button class="btn btn-success btn-lg" type="submit">
-              ✓ Verkauf bestätigen
+              Verkauf bestätigen
             </button>
             <a class="btn btn-outline-secondary" href="{{ url_for('index') }}">Abbrechen</a>
           </div>
@@ -253,7 +253,7 @@ document.getElementById('quantity').addEventListener('input', updatePrice);
               {% if p.shop_qty == 0 %}
                 ❌ Nicht verfügbar
               {% else %}
-                ✓ Verfügbar
+                Verfügbar
               {% endif %}
             </td>
           </tr>

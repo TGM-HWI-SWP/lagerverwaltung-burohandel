@@ -122,12 +122,12 @@ class ReportB:
     def _get_movement_type_display(movement_type: str) -> str:
         """Bewegungstyp in lesbares Format konvertieren"""
         type_map = {
-            "IN": "📥 Einkauf",
-            "OUT": "📤 Auslieferung",
-            "TO_SHOP": "🏬 Zum Shop",
-            "FROM_SHOP": "📦 Vom Shop",
-            "SOLD": "💳 Verkauf",
-            "CORRECTION": "🔧 Korrektur",
+            "IN": "Einkauf",
+            "OUT": "Auslieferung",
+            "TO_SHOP": "Zum Shop",
+            "FROM_SHOP": "Vom Shop",
+            "SOLD": "Verkauf",
+            "CORRECTION": "Korrektur",
         }
         return type_map.get(movement_type, movement_type)
 
@@ -140,22 +140,20 @@ class ReportB:
         Returns:
             Dictionary mit Lagerverlauf-Daten
         """
-        if not self.products:
-            return {}
-
         total_value = 0.0
         by_category = defaultdict(float)
         low_stock_count = 0
 
-        for product in self.products.values():
-            value = product.get("price", 0) * product.get("available_total", 0)
-            total_value += value
+        if self.products:
+            for product in self.products.values():
+                value = product.get("price", 0) * product.get("available_total", 0)
+                total_value += value
 
-            category = product.get("category", "Unbeantwortet")
-            by_category[category] += value
+                category = product.get("category", "Unbeantwortet")
+                by_category[category] += value
 
-            if product.get("is_low_stock", False):
-                low_stock_count += 1
+                if product.get("is_low_stock", False):
+                    low_stock_count += 1
 
         return {
             "total_inventory_value": total_value,
@@ -163,8 +161,8 @@ class ReportB:
             "by_category": dict(sorted(by_category.items(), key=lambda x: x[1], reverse=True)),
             "low_stock_count": low_stock_count,
             "categories": list(by_category.keys()),
-            "total_warehouse_qty": sum(p.get("warehouse_qty", 0) for p in self.products.values()),
-            "total_shop_qty": sum(p.get("shop_qty", 0) for p in self.products.values()),
+            "total_warehouse_qty": sum(p.get("warehouse_qty", 0) for p in self.products.values()) if self.products else 0,
+            "total_shop_qty": sum(p.get("shop_qty", 0) for p in self.products.values()) if self.products else 0,
         }
 
     def get_category_statistics(self) -> List[Dict]:

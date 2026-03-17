@@ -7,7 +7,7 @@
     <!-- Header -->
     <div class="row mb-4">
         <div class="col-12">
-            <h1 class="display-4">📊 Report B</h1>
+            <h1 class="display-4">Report B</h1>
             <p class="text-muted">Bewegungsprotokoll & Lagerverlauf-Statistiken</p>
             <small class="text-secondary">Generiert: {{ report.generated_at }}</small>
         </div>
@@ -55,7 +55,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">🏷️ Bewegungen nach Typ</h5>
+                    <h5 class="mb-0">Bewegungen nach Typ</h5>
                 </div>
                 <div class="card-body">
                     <div class="row">
@@ -82,7 +82,7 @@
         <div class="col-lg-6">
             <div class="card">
                 <div class="card-header bg-info text-white">
-                    <h5 class="mb-0">📈 Bewegungen über Zeit</h5>
+                    <h5 class="mb-0">Bewegungen über Zeit</h5>
                 </div>
                 <div class="card-body">
                     <img src="data:image/png;base64,{{ report.charts.movement_timeline }}" class="img-fluid" alt="Bewegungs-Timeline">
@@ -96,7 +96,7 @@
         <div class="col-lg-6">
             <div class="card">
                 <div class="card-header bg-info text-white">
-                    <h5 class="mb-0">🏷️ Verteilung nach Typ</h5>
+                    <h5 class="mb-0">Verteilung nach Typ</h5>
                 </div>
                 <div class="card-body">
                     <img src="data:image/png;base64,{{ report.charts.movement_types }}" class="img-fluid" alt="Bewegungs-Typen">
@@ -111,7 +111,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header bg-success text-white">
-                    <h5 class="mb-0">📦 Lagerverlauf-Statistiken</h5>
+                    <h5 class="mb-0">Lagerverlauf-Statistiken</h5>
                 </div>
                 <div class="card-body">
                     <div class="row">
@@ -160,7 +160,7 @@
         <div class="col-lg-6">
             <div class="card">
                 <div class="card-header bg-warning text-white">
-                    <h5 class="mb-0">💰 Bestandswert nach Kategorie</h5>
+                    <h5 class="mb-0">Bestandswert nach Kategorie</h5>
                 </div>
                 <div class="card-body">
                     <img src="data:image/png;base64,{{ report.charts.inventory_value }}" class="img-fluid" alt="Bestandswert">
@@ -174,7 +174,7 @@
         <div class="col-lg-6">
             <div class="card">
                 <div class="card-header bg-warning text-white">
-                    <h5 class="mb-0">🏢 Lager vs. Shop</h5>
+                    <h5 class="mb-0">Lager vs. Shop</h5>
                 </div>
                 <div class="card-body">
                     <img src="data:image/png;base64,{{ report.charts.warehouse_vs_shop }}" class="img-fluid" alt="Lager vs Shop">
@@ -190,7 +190,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header bg-info text-white">
-                    <h5 class="mb-0">📊 Kumulierte Bestands-Bewegungen</h5>
+                    <h5 class="mb-0">Kumulierte Bestands-Bewegungen</h5>
                 </div>
                 <div class="card-body">
                     <img src="data:image/png;base64,{{ report.charts.movement_quantity }}" class="img-fluid" alt="Kumulierte Bewegungen">
@@ -206,7 +206,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header bg-secondary text-white">
-                    <h5 class="mb-0">📑 Statistik nach Kategorie</h5>
+                    <h5 class="mb-0">Statistik nach Kategorie</h5>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -244,7 +244,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header bg-dark text-white">
-                    <h5 class="mb-0">📝 Detailliertes Bewegungsprotokoll (neueste 50)</h5>
+                    <h5 class="mb-0">Detailliertes Bewegungsprotokoll (neueste 50)</h5>
                 </div>
                 <div class="card-body">
                     {% if report.movement_details %}
@@ -298,7 +298,7 @@
     <!-- Footer mit Print-Option -->
     <div class="row mb-4">
         <div class="col-12">
-            <button class="btn btn-primary" onclick="window.print();">🖨️ Drucken</button>
+            <button class="btn btn-primary" onclick="window.print();">Drucken</button>
             <a href="{{ url_for('index') }}" class="btn btn-secondary">← Zurück zum Dashboard</a>
         </div>
     </div>
