@@ -7,6 +7,7 @@ from flask import Flask, flash, redirect, render_template, request, url_for
 
 from src.adapters.repository import SQLiteRepository
 from src.adapters.report import ConsoleReportAdapter
+from src.reports.report_b import ReportB
 from src.services import WarehouseService
 
 
@@ -175,6 +176,17 @@ def create_app(db_path: str = "warehouse.db") -> Flask:
 
         products = app.warehouse_service.get_products_with_totals()
         return render_template("verkauf.html", products=products)
+
+    @app.route("/report_b")
+    def report_b():
+        """Report B - Bewegungsprotokoll und Lagerverlauf-Statistiken"""
+        movements = app.warehouse_service.get_movements()
+        products = app.warehouse_service.get_products_with_totals()
+        
+        report_generator = ReportB(movements, products)
+        report_data = report_generator.generate_full_report()
+        
+        return render_template("report_b.html", report=report_data)
 
     @app.route("/bestellung", methods=["GET", "POST"])
     def bestellung():

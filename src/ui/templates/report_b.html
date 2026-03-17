@@ -1,0 +1,338 @@
+{% extends "base.html" %}
+
+{% block title %}Report B - Bewegungsprotokoll & Lagerverlauf{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-5">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="display-4">📊 Report B</h1>
+            <p class="text-muted">Bewegungsprotokoll & Lagerverlauf-Statistiken</p>
+            <small class="text-secondary">Generiert: {{ report.generated_at }}</small>
+        </div>
+    </div>
+
+    <!-- Schnell-Übersicht -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card border-left-primary">
+                <div class="card-body">
+                    <div class="text-primary font-weight-bold text-uppercase mb-2">Gesamtbewegungen</div>
+                    <div class="h3 mb-0">{{ report.movement_summary.total_movements }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-left-success">
+                <div class="card-body">
+                    <div class="text-success font-weight-bold text-uppercase mb-2">Eingänge</div>
+                    <div class="h3 mb-0">{{ report.movement_summary.total_items_in }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-left-danger">
+                <div class="card-body">
+                    <div class="text-danger font-weight-bold text-uppercase mb-2">Ausgänge</div>
+                    <div class="h3 mb-0">{{ report.movement_summary.total_items_out }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-left-warning">
+                <div class="card-body">
+                    <div class="text-warning font-weight-bold text-uppercase mb-2">Netto-Fluss</div>
+                    <div class="h3 mb-0">{{ "%+d"|format(report.movement_summary.net_flow) }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bewegungen nach Typ -->
+    {% if report.movement_summary.by_type %}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">🏷️ Bewegungen nach Typ</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% for movement_type, count in report.movement_summary.by_type.items() %}
+                        <div class="col-md-6 col-lg-3 mb-3">
+                            <div class="p-3 bg-light rounded">
+                                <strong>{{ movement_type }}</strong>
+                                <div class="h5 text-primary">{{ count }}</div>
+                                <small class="text-muted">Bewegungen</small>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Visualisierungen -->
+    <div class="row mb-4">
+        <!-- Bewegungs-Timeline -->
+        {% if report.charts.movement_timeline %}
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">📈 Bewegungen über Zeit</h5>
+                </div>
+                <div class="card-body">
+                    <img src="data:image/png;base64,{{ report.charts.movement_timeline }}" class="img-fluid" alt="Bewegungs-Timeline">
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Bewegungs-Typen -->
+        {% if report.charts.movement_types %}
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">🏷️ Verteilung nach Typ</h5>
+                </div>
+                <div class="card-body">
+                    <img src="data:image/png;base64,{{ report.charts.movement_types }}" class="img-fluid" alt="Bewegungs-Typen">
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Lagerverlauf Statistiken -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">📦 Lagerverlauf-Statistiken</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="p-3 bg-light rounded mb-3">
+                                <strong>Gesamtbestandswert</strong>
+                                <div class="h4 text-success">{{ "%.2f"|format(report.inventory_statistics.total_inventory_value) }} €</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="p-3 bg-light rounded mb-3">
+                                <strong>Produkte im Lager</strong>
+                                <div class="h4 text-info">{{ report.inventory_statistics.total_products }}</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="p-3 bg-light rounded mb-3">
+                                <strong>Kritischer Bestand</strong>
+                                <div class="h4 text-warning">{{ report.inventory_statistics.low_stock_count }}</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="p-3 bg-light rounded">
+                                <strong>Gesamt im Lager</strong>
+                                <div class="h4 text-primary">{{ report.inventory_statistics.total_warehouse_qty }}</div>
+                                <small class="text-muted">Einheiten</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="p-3 bg-light rounded">
+                                <strong>Gesamt im Shop</strong>
+                                <div class="h4 text-primary">{{ report.inventory_statistics.total_shop_qty }}</div>
+                                <small class="text-muted">Einheiten</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bestandswert Visualisierungen -->
+    <div class="row mb-4">
+        <!-- Bestandswert nach Kategorie -->
+        {% if report.charts.inventory_value %}
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header bg-warning text-white">
+                    <h5 class="mb-0">💰 Bestandswert nach Kategorie</h5>
+                </div>
+                <div class="card-body">
+                    <img src="data:image/png;base64,{{ report.charts.inventory_value }}" class="img-fluid" alt="Bestandswert">
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Lager vs. Shop -->
+        {% if report.charts.warehouse_vs_shop %}
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header bg-warning text-white">
+                    <h5 class="mb-0">🏢 Lager vs. Shop</h5>
+                </div>
+                <div class="card-body">
+                    <img src="data:image/png;base64,{{ report.charts.warehouse_vs_shop }}" class="img-fluid" alt="Lager vs Shop">
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Kumulierte Bewegungs-Mengen -->
+    {% if report.charts.movement_quantity %}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">📊 Kumulierte Bestands-Bewegungen</h5>
+                </div>
+                <div class="card-body">
+                    <img src="data:image/png;base64,{{ report.charts.movement_quantity }}" class="img-fluid" alt="Kumulierte Bewegungen">
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Kategorie-Statistiken -->
+    {% if report.category_statistics %}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0">📑 Statistik nach Kategorie</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Kategorie</th>
+                                    <th class="text-center">Produkte</th>
+                                    <th class="text-center">Gesamtmenge</th>
+                                    <th class="text-right">Gesamtwert (€)</th>
+                                    <th class="text-right">Ø Wert/Produkt (€)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for cat in report.category_statistics %}
+                                <tr>
+                                    <td><strong>{{ cat.category }}</strong></td>
+                                    <td class="text-center"><span class="badge badge-info">{{ cat.product_count }}</span></td>
+                                    <td class="text-center">{{ cat.total_qty }}</td>
+                                    <td class="text-right">{{ "%.2f"|format(cat.total_value) }}</td>
+                                    <td class="text-right">{{ "%.2f"|format(cat.avg_value_per_product) }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Detailliertes Bewegungsprotokoll -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0">📝 Detailliertes Bewegungsprotokoll (neueste 50)</h5>
+                </div>
+                <div class="card-body">
+                    {% if report.movement_details %}
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-sm">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Zeitstempel</th>
+                                    <th>Produkt</th>
+                                    <th>Typ</th>
+                                    <th class="text-center">Menge</th>
+                                    <th>Grund</th>
+                                    <th>Benutzer</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for movement in report.movement_details %}
+                                <tr>
+                                    <td><small>{{ movement.timestamp }}</small></td>
+                                    <td>
+                                        <strong>{{ movement.product_name }}</strong>
+                                        <br><small class="text-muted">{{ movement.product_id }}</small>
+                                    </td>
+                                    <td>
+                                        <span class="badge badge-pill {% if movement.movement_type == 'IN' or movement.movement_type == 'FROM_SHOP' %}badge-success{% elif movement.movement_type == 'SOLD' or movement.movement_type == 'OUT' %}badge-danger{% else %}badge-info{% endif %}">
+                                            {{ movement.type_display }}
+                                        </span>
+                                    </td>
+                                    <td class="text-center">
+                                        <strong {% if movement.quantity_change > 0 %}class="text-success"{% else %}class="text-danger"{% endif %}>
+                                            {{ "%+d"|format(movement.quantity_change) }}
+                                        </strong>
+                                    </td>
+                                    <td><small>{{ movement.reason or "—" }}</small></td>
+                                    <td><small>{{ movement.performed_by }}</small></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="alert alert-info">
+                        <strong>Keine Lagerbewegungen vorhanden</strong>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer mit Print-Option -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <button class="btn btn-primary" onclick="window.print();">🖨️ Drucken</button>
+            <a href="{{ url_for('index') }}" class="btn btn-secondary">← Zurück zum Dashboard</a>
+        </div>
+    </div>
+</div>
+
+<style>
+    .border-left-primary {
+        border-left: 4px solid #007bff !important;
+    }
+    .border-left-success {
+        border-left: 4px solid #28a745 !important;
+    }
+    .border-left-danger {
+        border-left: 4px solid #dc3545 !important;
+    }
+    .border-left-warning {
+        border-left: 4px solid #ffc107 !important;
+    }
+    
+    .card {
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    @media print {
+        .container-fluid {
+            padding: 0 !important;
+        }
+        .card {
+            page-break-inside: avoid;
+        }
+        .row {
+            page-break-inside: avoid;
+        }
+    }
+</style>
+{% endblock %}
