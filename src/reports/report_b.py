@@ -9,6 +9,7 @@ from collections import defaultdict, Counter
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from matplotlib import rcParams
+from matplotlib.ticker import MaxNLocator
 
 # Matplotlib auf non-interactive backend setzen für Web-Nutzung
 plt.switch_backend('Agg')
@@ -234,6 +235,7 @@ class ReportB:
         ax.set_ylabel('Anzahl Bewegungen', fontweight='bold')
         ax.set_title('Lagerbewegungen pro Tag', fontweight='bold', fontsize=12)
         ax.grid(True, alpha=0.3)
+        ax.yaxis.set_major_locator(MaxNLocator(integer=True))
 
         # X-Achse formatieren
         if len(dates) > 1:
@@ -275,6 +277,7 @@ class ReportB:
         ax.set_ylabel('Anzahl', fontweight='bold')
         ax.set_title('Lagerbewegungen nach Typ', fontweight='bold', fontsize=12)
         ax.grid(True, alpha=0.3, axis='y')
+        ax.yaxis.set_major_locator(MaxNLocator(integer=True))
         plt.xticks(rotation=45, ha='right')
 
         plt.tight_layout()
@@ -433,6 +436,5 @@ class ReportB:
                 "movement_types": self.generate_movement_type_chart(),
                 "inventory_value": self.generate_inventory_value_chart(),
                 "warehouse_vs_shop": self.generate_warehouse_vs_shop_chart(),
-                "movement_quantity": self.generate_movement_quantity_chart(),
             },
         }

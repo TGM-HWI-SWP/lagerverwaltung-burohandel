@@ -13,29 +13,32 @@
         </div>
     </div>
 
-    <!-- Schnell-Übersicht -->
+    <!-- Schnell-Übersicht mit Erklärungen -->
     <div class="row mb-4">
         <div class="col-md-3">
             <div class="card border-left-primary">
                 <div class="card-body">
                     <div class="text-primary font-weight-bold text-uppercase mb-2">Gesamtbewegungen</div>
-                    <div class="h3 mb-0">{{ report.movement_summary.total_movements }}</div>
+                    <div class="h3 mb-2">{{ report.movement_summary.total_movements }}</div>
+                    <small class="text-muted">Alle Lagerbewegungen gesamt</small>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
             <div class="card border-left-success">
                 <div class="card-body">
-                    <div class="text-success font-weight-bold text-uppercase mb-2">Eingänge</div>
-                    <div class="h3 mb-0">{{ report.movement_summary.total_items_in }}</div>
+                    <div class="text-success font-weight-bold text-uppercase mb-2">Eingänge ins Lager</div>
+                    <div class="h3 mb-2">{{ report.movement_summary.total_items_in }}</div>
+                    <small class="text-muted">Einheiten zum Lager hinzugefügt</small>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
             <div class="card border-left-danger">
                 <div class="card-body">
-                    <div class="text-danger font-weight-bold text-uppercase mb-2">Ausgänge</div>
-                    <div class="h3 mb-0">{{ report.movement_summary.total_items_out }}</div>
+                    <div class="text-danger font-weight-bold text-uppercase mb-2">Ausgänge aus Lager</div>
+                    <div class="h3 mb-2">{{ report.movement_summary.total_items_out }}</div>
+                    <small class="text-muted">Einheiten aus Lager entnommen</small>
                 </div>
             </div>
         </div>
@@ -43,7 +46,8 @@
             <div class="card border-left-warning">
                 <div class="card-body">
                     <div class="text-warning font-weight-bold text-uppercase mb-2">Netto-Fluss</div>
-                    <div class="h3 mb-0">{{ "%+d"|format(report.movement_summary.net_flow) }}</div>
+                    <div class="h3 mb-2">{{ "%+d"|format(report.movement_summary.net_flow) }}</div>
+                    <small class="text-muted">Bilanz: Eingänge - Ausgänge</small>
                 </div>
             </div>
         </div>
@@ -183,22 +187,6 @@
         </div>
         {% endif %}
     </div>
-
-    <!-- Kumulierte Bewegungs-Mengen -->
-    {% if report.charts.movement_quantity %}
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header bg-info text-white">
-                    <h5 class="mb-0">Kumulierte Bestands-Bewegungen</h5>
-                </div>
-                <div class="card-body">
-                    <img src="data:image/png;base64,{{ report.charts.movement_quantity }}" class="img-fluid" alt="Kumulierte Bewegungen">
-                </div>
-            </div>
-        </div>
-    </div>
-    {% endif %}
 
     <!-- Kategorie-Statistiken -->
     {% if report.category_statistics %}
