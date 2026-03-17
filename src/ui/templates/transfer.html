@@ -167,11 +167,11 @@ function updateDirection(direction) {
   if (direction === 'to_shop') {
     quantityInput.max = warehouse;
     availableQty.textContent = warehouse;
-    transferTip.textContent = `💡 Verfügbar im Lager: ${warehouse} Stück`;
+    transferTip.textContent = `Verfügbar im Lager: ${warehouse} Stück`;
   } else if (direction === 'to_warehouse') {
     quantityInput.max = shop;
     availableQty.textContent = shop;
-    transferTip.textContent = `💡 Verfügbar im Shop: ${shop} Stück`;
+    transferTip.textContent = `Verfügbar im Shop: ${shop} Stück`;
   }
 }
 

@@ -412,6 +412,15 @@
           <li><a class="dropdown-item" href="{{ url_for('low_stock') }}"><i class="bi bi-exclamation-triangle"></i> Alerts</a></li>
         </ul>
       </div>
+
+      <div class="btn-group" role="group" title="Reports">
+        <button type="button" class="btn btn-outline-light btn-sm dropdown-toggle" data-bs-toggle="dropdown">
+          <i class="bi bi-file-earmark-pdf"></i> Reports
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end">
+          <li><a class="dropdown-item" href="{{ url_for('report_b') }}"><i class="bi bi-graph-up"></i> Report B - Movement</a></li>
+        </ul>
+      </div>
     </div>
   </div>
 </nav>

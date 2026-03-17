@@ -7,6 +7,7 @@ from flask import Flask, flash, redirect, render_template, request, url_for
 
 from src.adapters.repository import SQLiteRepository
 from src.adapters.report import ConsoleReportAdapter
+from src.reports.report_b import ReportB
 from src.services import WarehouseService
 
 
@@ -104,7 +105,7 @@ def create_app(db_path: str = "warehouse.db") -> Flask:
 
             if success:
                 product = app.warehouse_service.get_product(product_id)
-                flash(f"✅ Einkauf erfolgreich: {quantity}x {product.name} ins Lager", "success")
+                flash(f"Einkauf erfolgreich: {quantity}x {product.name} ins Lager", "success")
                 return redirect(url_for("index"))
             else:
                 flash("Einkauf fehlgeschlagen", "danger")
@@ -129,14 +130,14 @@ def create_app(db_path: str = "warehouse.db") -> Flask:
                 success = app.warehouse_service.transfer_to_shop(product_id, quantity)
                 if success:
                     product = app.warehouse_service.get_product(product_id)
-                    flash(f"✅ Transfer erfolgreich: {quantity}x {product.name} zum Shop", "success")
+                    flash(f"Transfer erfolgreich: {quantity}x {product.name} zum Shop", "success")
                 else:
                     flash("Transfer fehlgeschlagen - Nicht genug Bestand im Lager", "danger")
             elif direction == "to_warehouse":
                 success = app.warehouse_service.transfer_to_warehouse(product_id, quantity)
                 if success:
                     product = app.warehouse_service.get_product(product_id)
-                    flash(f"✅ Transfer erfolgreich: {quantity}x {product.name} zum Lager", "success")
+                    flash(f"Transfer erfolgreich: {quantity}x {product.name} zum Lager", "success")
                 else:
                     flash("Transfer fehlgeschlagen - Nicht genug Bestand im Shop", "danger")
             else:
@@ -167,7 +168,7 @@ def create_app(db_path: str = "warehouse.db") -> Flask:
 
             if success:
                 product = app.warehouse_service.get_product(product_id)
-                flash(f"✅ Verkauf erfolgreich: {quantity}x {product.name}", "success")
+                flash(f"Verkauf erfolgreich: {quantity}x {product.name}", "success")
                 return redirect(url_for("index"))
             else:
                 flash("Verkauf fehlgeschlagen - Nicht genug Bestand im Shop", "danger")
@@ -175,6 +176,17 @@ def create_app(db_path: str = "warehouse.db") -> Flask:
 
         products = app.warehouse_service.get_products_with_totals()
         return render_template("verkauf.html", products=products)
+
+    @app.route("/report_b")
+    def report_b():
+        """Report B - Bewegungsprotokoll und Lagerverlauf-Statistiken"""
+        movements = app.warehouse_service.get_movements()
+        products = app.warehouse_service.get_products_with_totals()
+        
+        report_generator = ReportB(movements, products)
+        report_data = report_generator.generate_full_report()
+        
+        return render_template("report_b.html", report=report_data)
 
     @app.route("/bestellung", methods=["GET", "POST"])
     def bestellung():

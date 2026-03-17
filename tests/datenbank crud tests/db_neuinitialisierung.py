@@ -14,7 +14,7 @@ def load_sample_data():
     sample_file = Path(__file__).parent / "src" / "adapters" / "sample_data.json"
     
     if not sample_file.exists():
-        print(f"❌ Sample-Datei nicht gefunden: {sample_file}")
+        print(f"Fehler: Sample-Datei nicht gefunden: {sample_file}")
         return []
     
     with open(sample_file, "r", encoding="utf-8") as f:
@@ -54,9 +54,9 @@ def init_database(db_path: str = "warehouse.db"):
     # Alte Datenbank löschen, wenn vorhanden
     if os.path.exists(db_path):
         os.remove(db_path)
-        print(f"🗑️  Alte Datenbank gelöscht: {db_path}")
+        print(f"Info: Alte Datenbank gelöscht: {db_path}")
     
-    print(f"📦 Initialisiere neue Datenbank: {db_path}")
+    print(f"Info: Initialisiere neue Datenbank: {db_path}")
     
     # Repository erstellen (initialisiert Tabellen mit neuem Schema)
     repository = SQLiteRepository(db_path=db_path)
@@ -65,15 +65,15 @@ def init_database(db_path: str = "warehouse.db"):
     products = load_sample_data()
     
     if not products:
-        print("❌ Keine Produkte zum Laden gefunden")
+        print("Fehler: Keine Produkte zum Laden gefunden")
         return False
     
     # Produkte in Datenbank speichern
     for product in products:
         repository.save_product(product)
-        print(f"✅ {product.name} ({product.id})")
+        print(f"OK: {product.name} ({product.id})")
     
-    print(f"\n✨ Datenbank erfolgreich initialisiert mit {len(products)} Produkten!")
+    print(f"\nErfolgreich: Datenbank initialisiert mit {len(products)} Produkten!")
     return True
 
 

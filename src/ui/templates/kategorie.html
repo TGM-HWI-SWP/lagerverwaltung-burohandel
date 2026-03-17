@@ -77,9 +77,9 @@
                 </td>
                 <td class="text-end">
                   {% if p.is_low_stock %}
-                    <span class="badge bg-danger">⚠️ Kritisch</span>
+                    <span class="badge bg-danger">Kritisch</span>
                   {% else %}
-                    <span class="badge bg-success">✓ OK</span>
+                    <span class="badge bg-success">OK</span>
                   {% endif %}
                 </td>
               </tr>
@@ -125,7 +125,7 @@
 
               {% if p.is_low_stock %}
               <div class="alert alert-warning mt-3 mb-0 p-2">
-                <small>⚠️ Kritischer Bestand</small>
+                <small>Kritischer Bestand</small>
               </div>
               {% endif %}
             </div>
